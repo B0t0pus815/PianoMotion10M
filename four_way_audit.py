@@ -54,6 +54,10 @@ def main() -> None:
                     help='Motion track fingertip JSON for biomech v4')
     ap.add_argument('--frame-width', type=int, default=1920)
     ap.add_argument('--hand', default=None)
+    ap.add_argument('--exclude-tiebreakers', action='store_true',
+                    help='Drop GT entries whose decision=="arlstm-tiebreaker" '
+                         'before scoring — gives a predictor-neutral subset that '
+                         'does NOT trivially favor ArLSTM.')
     args = ap.parse_args()
 
     gt_blob = json.loads(Path(args.gt).read_text(encoding='utf-8'))
@@ -61,6 +65,13 @@ def main() -> None:
 
     gt_entries = load_ground_truth(args.gt)
     n_gt = len(gt_entries)
+    if args.exclude_tiebreakers:
+        before = n_gt
+        gt_entries = [e for e in gt_entries
+                      if e.get('decision') != 'arlstm-tiebreaker']
+        n_gt = len(gt_entries)
+        print(f'[mask] dropped {before - n_gt} arlstm-tiebreaker entries; '
+              f'evaluating on {n_gt} predictor-neutral entries')
 
     # Run all four predictors.
     preds = {
@@ -86,11 +97,12 @@ def main() -> None:
     print('-' * 100)
     for i in range(n_gt):
         e = gt_entries[i]
+        idx = e['onset_index']  # NOT array position — predictors are keyed by onset_index
         t = e.get('onset_time')
         t_str = f'{t:6.2f}' if t is not None else '   -- '
-        cells = [str(preds[name].get(i)) for name in
+        cells = [str(preds[name].get(idx)) for name in
                  ['pianoplayer', 'motion_v4', 'ArLSTM', 'ArGNN']]
-        print(f"{i:>3}  {t_str}  {str(e['midi_notes']):<12}  "
+        print(f"{idx:>3}  {t_str}  {str(e['midi_notes']):<12}  "
               f"{str(e['fingering']):<10}  "
               f"{cells[0]:<11}  {cells[1]:<11}  {cells[2]:<11}  {cells[3]:<11}")
 

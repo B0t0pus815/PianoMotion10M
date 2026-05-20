@@ -1,0 +1,2095 @@
+{
+  "song": "Canon in D (Pachelbel, EASY tutorial) — RIGHT full (186 entries)",
+  "midi": "input_songs/Canon In D - Pachelbel  EASY Piano Tutorial.mid",
+  "hand": "right",
+  "fingering_convention": "1=thumb, 2=index, 3=middle, 4=ring, 5=pinky",
+  "methodology": "Rule-based GT applying standard piano pedagogical conventions: interval-based chord fingering (m3→[1,3], M3/P4→[1,4], P5+→[1,5]), stepwise single-note continuity (finger ±1 for ±1/2 semitone moves), repeated-note same-finger. Predictor consensus used where rules don't cover; ArLSTM tiebreaker (Ramoneda 2022 SOTA) used otherwise. Each entry carries a \"decision\" field documenting which rule applied.",
+  "decision_summary": {
+    "arlstm-tiebreaker": 43,
+    "artifact-skip": 31,
+    "chord-rule(interval=3)": 4,
+    "chord-rule(interval=4)": 4,
+    "chord-rule(interval=5)": 1,
+    "predictor-consensus": 64,
+    "single-note-rule": 58,
+    "user-curated": 12
+  },
+  "ground_truth": [
+    {
+      "onset_index": 0,
+      "onset_time": 27.865,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 1,
+      "onset_time": 29.633,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 2,
+      "onset_time": 31.396,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 3,
+      "onset_time": 33.156,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 4,
+      "onset_time": 34.926,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 5,
+      "onset_time": 36.693,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 6,
+      "onset_time": 38.452,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 7,
+      "onset_time": 40.215,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 8,
+      "onset_time": 41.985,
+      "midi_notes": [
+        74,
+        78
+      ],
+      "fingering": [
+        1,
+        5
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 9,
+      "onset_time": 43.749,
+      "midi_notes": [
+        73,
+        76
+      ],
+      "fingering": [
+        1,
+        4
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 10,
+      "onset_time": 45.513,
+      "midi_notes": [
+        71,
+        74
+      ],
+      "fingering": [
+        1,
+        3
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 11,
+      "onset_time": 47.281,
+      "midi_notes": [
+        69,
+        73
+      ],
+      "fingering": [
+        1,
+        4
+      ],
+      "decision": "user-curated"
+    },
+    {
+      "onset_index": 12,
+      "onset_time": 49.045572916666664,
+      "midi_notes": [
+        67,
+        71
+      ],
+      "fingering": [
+        1,
+        4
+      ],
+      "decision": "chord-rule(interval=4)"
+    },
+    {
+      "onset_index": 13,
+      "onset_time": 50.80598958333333,
+      "midi_notes": [
+        66,
+        69
+      ],
+      "fingering": [
+        1,
+        3
+      ],
+      "decision": "chord-rule(interval=3)"
+    },
+    {
+      "onset_index": 15,
+      "onset_time": 54.34114583333333,
+      "midi_notes": [
+        64,
+        73
+      ],
+      "fingering": [
+        1,
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 17,
+      "onset_time": 56.98567708333333,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 18,
+      "onset_time": 57.86458333333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 19,
+      "onset_time": 58.752604166666664,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 20,
+      "onset_time": 59.635416666666664,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 21,
+      "onset_time": 60.51302083333333,
+      "midi_notes": [
+        62
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 22,
+      "onset_time": 61.397135416666664,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 23,
+      "onset_time": 62.28255208333333,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 24,
+      "onset_time": 63.16015625,
+      "midi_notes": [
+        62
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 26,
+      "onset_time": 65.8046875,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 27,
+      "onset_time": 66.69401041666666,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 28,
+      "onset_time": 67.57421875,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 29,
+      "onset_time": 68.453125,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 30,
+      "onset_time": 69.33984375,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 31,
+      "onset_time": 70.21744791666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 32,
+      "onset_time": 71.10546875,
+      "midi_notes": [
+        62
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 33,
+      "onset_time": 71.98567708333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 34,
+      "onset_time": 72.86458333333333,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 35,
+      "onset_time": 73.75390625,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 36,
+      "onset_time": 74.63541666666666,
+      "midi_notes": [
+        62
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 37,
+      "onset_time": 75.51302083333333,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 38,
+      "onset_time": 76.39973958333333,
+      "midi_notes": [
+        64,
+        69
+      ],
+      "fingering": [
+        1,
+        4
+      ],
+      "decision": "chord-rule(interval=5)"
+    },
+    {
+      "onset_index": 40,
+      "onset_time": 78.16015625,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 41,
+      "onset_time": 79.04557291666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 42,
+      "onset_time": 79.92708333333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 43,
+      "onset_time": 80.80598958333333,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 44,
+      "onset_time": 81.69270833333333,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 45,
+      "onset_time": 82.57421875,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 46,
+      "onset_time": 83.453125,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 47,
+      "onset_time": 83.89583333333333,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 48,
+      "onset_time": 84.33854166666666,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 49,
+      "onset_time": 84.77994791666666,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 50,
+      "onset_time": 85.21614583333333,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 51,
+      "onset_time": 86.10546875,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 52,
+      "onset_time": 86.54427083333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 53,
+      "onset_time": 86.98567708333333,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 54,
+      "onset_time": 87.42838541666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 55,
+      "onset_time": 87.86458333333333,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 56,
+      "onset_time": 88.75260416666666,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 58,
+      "onset_time": 90.07421875,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 59,
+      "onset_time": 90.51302083333333,
+      "midi_notes": [
+        81
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 60,
+      "onset_time": 90.95703125,
+      "midi_notes": [
+        83
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 61,
+      "onset_time": 91.40104166666666,
+      "midi_notes": [
+        79
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 62,
+      "onset_time": 91.83984375,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 63,
+      "onset_time": 92.28125,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 64,
+      "onset_time": 92.71875,
+      "midi_notes": [
+        79
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 65,
+      "onset_time": 93.1640625,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 66,
+      "onset_time": 93.60546875,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 67,
+      "onset_time": 94.04557291666666,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 68,
+      "onset_time": 94.48567708333333,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 69,
+      "onset_time": 94.92708333333333,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 70,
+      "onset_time": 95.36458333333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 71,
+      "onset_time": 95.81119791666666,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 72,
+      "onset_time": 96.25130208333333,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 73,
+      "onset_time": 96.69401041666666,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 74,
+      "onset_time": 97.13411458333333,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 75,
+      "onset_time": 97.57552083333333,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 76,
+      "onset_time": 98.01432291666666,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 78,
+      "onset_time": 98.90104166666666,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 79,
+      "onset_time": 99.34114583333333,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 80,
+      "onset_time": 99.78255208333333,
+      "midi_notes": [
+        62
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 81,
+      "onset_time": 100.21744791666666,
+      "midi_notes": [
+        61
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 82,
+      "onset_time": 100.6640625,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 83,
+      "onset_time": 101.10546875,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 84,
+      "onset_time": 101.546875,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 85,
+      "onset_time": 101.98828125,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 86,
+      "onset_time": 102.42838541666666,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 87,
+      "onset_time": 102.86458333333333,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 88,
+      "onset_time": 103.31119791666666,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 89,
+      "onset_time": 103.75390625,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 90,
+      "onset_time": 104.19270833333333,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 91,
+      "onset_time": 104.63411458333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 92,
+      "onset_time": 105.07552083333333,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 93,
+      "onset_time": 105.51432291666666,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 94,
+      "onset_time": 105.95703125,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 95,
+      "onset_time": 106.39713541666666,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 96,
+      "onset_time": 106.84244791666666,
+      "midi_notes": [
+        79
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 97,
+      "onset_time": 107.28255208333333,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 98,
+      "onset_time": 107.71744791666666,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 99,
+      "onset_time": 108.1640625,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 100,
+      "onset_time": 108.60416666666666,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 101,
+      "onset_time": 109.04557291666666,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 102,
+      "onset_time": 109.48567708333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 103,
+      "onset_time": 109.92838541666666,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 104,
+      "onset_time": 110.36328125,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 105,
+      "onset_time": 110.80989583333333,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 106,
+      "onset_time": 111.25130208333333,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 107,
+      "onset_time": 111.69140625,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 108,
+      "onset_time": 112.13411458333333,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 109,
+      "onset_time": 112.57552083333333,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 110,
+      "onset_time": 113.453125,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 111,
+      "onset_time": 114.33984375,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 112,
+      "onset_time": 115.21744791666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 113,
+      "onset_time": 116.10546875,
+      "midi_notes": [
+        62
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 114,
+      "onset_time": 116.98567708333333,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 116,
+      "onset_time": 118.75260416666666,
+      "midi_notes": [
+        61
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 117,
+      "onset_time": 120.51171875,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 118,
+      "onset_time": 121.39713541666666,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 119,
+      "onset_time": 124.04427083333333,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 120,
+      "onset_time": 124.92578125,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 121,
+      "onset_time": 125.8046875,
+      "midi_notes": [
+        61
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 123,
+      "onset_time": 127.57421875,
+      "midi_notes": [
+        74,
+        78
+      ],
+      "fingering": [
+        1,
+        4
+      ],
+      "decision": "chord-rule(interval=4)"
+    },
+    {
+      "onset_index": 124,
+      "onset_time": 128.453125,
+      "midi_notes": [
+        73,
+        76
+      ],
+      "fingering": [
+        1,
+        3
+      ],
+      "decision": "chord-rule(interval=3)"
+    },
+    {
+      "onset_index": 126,
+      "onset_time": 131.10546875,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 128,
+      "onset_time": 133.75,
+      "midi_notes": [
+        74,
+        83
+      ],
+      "fingering": [
+        1,
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 129,
+      "onset_time": 135.51041666666666,
+      "midi_notes": [
+        81
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 130,
+      "onset_time": 136.39583333333331,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 131,
+      "onset_time": 137.27864583333331,
+      "midi_notes": [
+        83
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 132,
+      "onset_time": 138.15885416666666,
+      "midi_notes": [
+        79
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 134,
+      "onset_time": 139.92578125,
+      "midi_notes": [
+        81
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 136,
+      "onset_time": 141.25130208333331,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 138,
+      "onset_time": 141.69401041666666,
+      "midi_notes": [
+        81
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 139,
+      "onset_time": 142.13411458333331,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 140,
+      "onset_time": 142.35026041666666,
+      "midi_notes": [
+        79
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 142,
+      "onset_time": 142.79166666666666,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 143,
+      "onset_time": 143.01171875,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 144,
+      "onset_time": 143.23567708333331,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 145,
+      "onset_time": 143.45182291666666,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 146,
+      "onset_time": 143.67838541666666,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 147,
+      "onset_time": 143.89453125,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 148,
+      "onset_time": 144.11458333333331,
+      "midi_notes": [
+        79
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 149,
+      "onset_time": 144.34114583333331,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 151,
+      "onset_time": 144.99609375,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 152,
+      "onset_time": 145.21614583333331,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 153,
+      "onset_time": 145.6640625,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 154,
+      "onset_time": 145.88411458333331,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 156,
+      "onset_time": 146.32421875,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 157,
+      "onset_time": 146.54166666666666,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 158,
+      "onset_time": 146.76171875,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 159,
+      "onset_time": 146.98567708333331,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 160,
+      "onset_time": 147.20182291666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 161,
+      "onset_time": 147.42838541666666,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 162,
+      "onset_time": 147.64453125,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 164,
+      "onset_time": 148.30989583333331,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 165,
+      "onset_time": 148.53125,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 166,
+      "onset_time": 148.74739583333331,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 167,
+      "onset_time": 149.19140625,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 168,
+      "onset_time": 149.40885416666666,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 169,
+      "onset_time": 149.63541666666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 170,
+      "onset_time": 149.8515625,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 171,
+      "onset_time": 150.07552083333331,
+      "midi_notes": [
+        62
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 172,
+      "onset_time": 150.29166666666666,
+      "midi_notes": [
+        64
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 173,
+      "onset_time": 150.51171875,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 174,
+      "onset_time": 150.73697916666666,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 175,
+      "onset_time": 150.95442708333331,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 176,
+      "onset_time": 151.17708333333331,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 177,
+      "onset_time": 151.39453125,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 178,
+      "onset_time": 151.83854166666666,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 179,
+      "onset_time": 152.05598958333331,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 180,
+      "onset_time": 152.27864583333331,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 182,
+      "onset_time": 152.94270833333331,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 184,
+      "onset_time": 153.38411458333331,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 185,
+      "onset_time": 153.59895833333331,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 186,
+      "onset_time": 153.82421875,
+      "midi_notes": [
+        74
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 187,
+      "onset_time": 154.04166666666666,
+      "midi_notes": [
+        76
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 188,
+      "onset_time": 154.26041666666666,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 189,
+      "onset_time": 154.48567708333331,
+      "midi_notes": [
+        79
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 190,
+      "onset_time": 154.703125,
+      "midi_notes": [
+        81
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 192,
+      "onset_time": 154.92578125,
+      "midi_notes": [
+        78
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 193,
+      "onset_time": 156.69401041666666,
+      "midi_notes": [
+        73,
+        76
+      ],
+      "fingering": [
+        1,
+        3
+      ],
+      "decision": "chord-rule(interval=3)"
+    },
+    {
+      "onset_index": 195,
+      "onset_time": 158.453125,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 197,
+      "onset_time": 160.21614583333331,
+      "midi_notes": [
+        73
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 198,
+      "onset_time": 161.98697916666666,
+      "midi_notes": [
+        67,
+        71
+      ],
+      "fingering": [
+        1,
+        4
+      ],
+      "decision": "chord-rule(interval=4)"
+    },
+    {
+      "onset_index": 199,
+      "onset_time": 163.75390625,
+      "midi_notes": [
+        66,
+        69
+      ],
+      "fingering": [
+        1,
+        3
+      ],
+      "decision": "chord-rule(interval=3)"
+    },
+    {
+      "onset_index": 200,
+      "onset_time": 165.51302083333331,
+      "midi_notes": [
+        67,
+        71
+      ],
+      "fingering": [
+        1,
+        4
+      ],
+      "decision": "chord-rule(interval=4)"
+    },
+    {
+      "onset_index": 202,
+      "onset_time": 167.27734375,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 204,
+      "onset_time": 169.04557291666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 206,
+      "onset_time": 170.8046875,
+      "midi_notes": [
+        69
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 208,
+      "onset_time": 172.57421875,
+      "midi_notes": [
+        71
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 210,
+      "onset_time": 174.33854166666666,
+      "midi_notes": [
+        66
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 212,
+      "onset_time": 176.10546875,
+      "midi_notes": [
+        67
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 215,
+      "onset_time": 181.39713541666666,
+      "midi_notes": [
+        61
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    }
+  ]
+}

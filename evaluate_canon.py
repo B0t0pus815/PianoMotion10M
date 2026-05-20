@@ -25,8 +25,10 @@ def engine_predictions(midi_path: str, hand: str) -> dict[int, list[int]]:
 
     Onsets are formed by bucketing simultaneous notes within ONSET_BUCKET_SEC.
     Within a bucket, fingerings are ordered by ascending pitch (matches GT).
+    Explicitly requests source='pianoplayer' (the default changed to 'arlstm'
+    in 2026-05-21).
     """
-    onsets = generate_fingering(midi_path)
+    onsets = generate_fingering(midi_path, source='pianoplayer')
     onsets = [e for e in onsets if e.expected_hand == hand]
     onsets.sort(key=lambda e: (e.time, e.pitch))
 
