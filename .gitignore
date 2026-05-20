@@ -3,3 +3,12 @@
 ./logs
 ./results
 .gitignore
+
+# vendored third-party (Ramoneda Automatic-Piano-Fingering, lumikey, etc.)
+external/
+
+# Python caches
+__pycache__/
+
+# error-triggered clip recorder outputs
+clips/

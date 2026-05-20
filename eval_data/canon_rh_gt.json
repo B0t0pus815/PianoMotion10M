@@ -1,0 +1,21 @@
+{
+  "song": "Canon in D (Pachelbel, EASY tutorial) — RH first 12 onsets",
+  "midi": "input_songs/Canon In D - Pachelbel  EASY Piano Tutorial.mid",
+  "hand": "right",
+  "fingering_convention": "1=thumb, 2=index, 3=middle, 4=ring, 5=pinky",
+  "notes": "Teacher's answer-key style: descending opening uses 5-4-3-2-1 thumb anchor, then 3-2-3 turn, then 1+5 / 1+4 / 1+3 / 1+4 for the double-stops. Bucket tolerance 0.05s.",
+  "ground_truth": [
+    {"onset_index": 0,  "onset_time": 27.865, "midi_notes": [78],     "fingering": [5]},
+    {"onset_index": 1,  "onset_time": 29.633, "midi_notes": [76],     "fingering": [4]},
+    {"onset_index": 2,  "onset_time": 31.396, "midi_notes": [74],     "fingering": [3]},
+    {"onset_index": 3,  "onset_time": 33.156, "midi_notes": [73],     "fingering": [2]},
+    {"onset_index": 4,  "onset_time": 34.926, "midi_notes": [71],     "fingering": [1]},
+    {"onset_index": 5,  "onset_time": 36.693, "midi_notes": [69],     "fingering": [3]},
+    {"onset_index": 6,  "onset_time": 38.452, "midi_notes": [71],     "fingering": [2]},
+    {"onset_index": 7,  "onset_time": 40.215, "midi_notes": [73],     "fingering": [3]},
+    {"onset_index": 8,  "onset_time": 41.985, "midi_notes": [74, 78], "fingering": [1, 5]},
+    {"onset_index": 9,  "onset_time": 43.749, "midi_notes": [73, 76], "fingering": [1, 4]},
+    {"onset_index": 10, "onset_time": 45.513, "midi_notes": [71, 74], "fingering": [1, 3]},
+    {"onset_index": 11, "onset_time": 47.281, "midi_notes": [69, 73], "fingering": [1, 4]}
+  ]
+}
