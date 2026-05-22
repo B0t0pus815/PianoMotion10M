@@ -4,6 +4,10 @@
 
 ## 4.1 評估目標
 
+整體評估流程如圖 4.0：
+
+![圖 4.0：評估方法 overview——四個 candidate fingering 來源透過同一份 rule-based GT 在 four_way_audit 中比較，分 Hard/Soft Accuracy 與 predictor-neutral subset 兩層報告。](../figures/eval_methodology.svg)
+
 Dual-Track Decoupling 架構（第三章）把 fingering 的兩個職責拆開：
 
 - **Logic Track (judge)**：負責判斷學生彈出的指法是否正確

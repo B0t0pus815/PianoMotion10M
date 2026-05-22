@@ -1,0 +1,43 @@
+%% Stage A → B → C pipeline data flow — thesis ch3 figure
+%% Render: mmdc -i figures/stage_pipeline.mmd -o figures/stage_pipeline.svg
+
+flowchart LR
+    MIDI([MIDI]):::input
+
+    subgraph A [<b>Stage A</b>: Logic Track]
+        direction TB
+        A1[generate_fingering<br/>source='arlstm']
+        A2[(ramoneda_predict)]
+        A1 --> A2
+    end
+
+    subgraph B [<b>Stage B</b>: Render]
+        direction TB
+        B1[simple_natural.py<br/>--fingering arlstm]
+        B2[apply_arlstm_fingering<br/>+ IK + MANO render]
+        B3[add_keyboard_overlay<br/>+ libx264 mux]
+        B1 --> B2 --> B3
+    end
+
+    subgraph C [<b>Stage C</b>: UI]
+        direction TB
+        C1[songs.json<br/>videoUrl]
+        C2[PracticeScreen.js]
+        C3[runner.py<br/>WS broadcaster]
+        C1 --> C2
+        C3 --> C2
+    end
+
+    artifact1[/canon_arlstm_kb.mp4/]:::artifact
+    artifact2[/student session/]:::artifact
+
+    MIDI --> A
+    A --> B
+    B --> artifact1
+    artifact1 --> C
+    C --> artifact2
+
+    A -.->|judge events| C
+
+    classDef input fill:#1a4d8f,color:#fff
+    classDef artifact fill:#fff,color:#222,stroke:#1a4d8f,stroke-width:2px

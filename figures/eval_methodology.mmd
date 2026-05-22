@@ -1,0 +1,43 @@
+%% Evaluation methodology overview — thesis ch4 figure
+%% Render: mmdc -i figures/eval_methodology.mmd -o figures/eval_methodology.svg
+
+flowchart TB
+    MIDI([MIDI]):::input
+
+    subgraph candidates [<b>4 candidate fingering sources</b>]
+        direction TB
+        pp[pianoplayer<br/>Parncutt DP]
+        motion[motion_v4<br/>biomech-derived]
+        arlstm[ArLSTM<br/>Ramoneda neural]
+        argnn[ArGNN<br/>Ramoneda GNN]
+    end
+
+    subgraph gt_gen [<b>Rule-based GT generator</b>]
+        direction TB
+        rules[Pedagogical rules<br/>interval / stepwise /<br/>consensus / tiebreaker]
+        gt_file[(eval_data/<br/>canon_*_rulebased_gt.json)]
+        rules --> gt_file
+    end
+
+    subgraph eval [<b>four_way_audit.py</b>]
+        direction TB
+        hard[Hard Accuracy<br/>full list match]
+        soft[Soft Accuracy<br/>±1 finger = 0.5 credit]
+        neutral[--exclude-tiebreakers<br/>predictor-neutral subset]
+        hard --- soft --- neutral
+    end
+
+    headline[/RH+LH n=183<br/><b>ArLSTM Soft 0.792</b><br/>pianoplayer 0.578<br/>motion 0.358<br/>ArGNN 0.654/]:::result
+
+    MIDI --> pp
+    MIDI --> motion
+    MIDI --> arlstm
+    MIDI --> argnn
+    MIDI --> rules
+
+    candidates --> eval
+    gt_file --> eval
+    eval --> headline
+
+    classDef input fill:#1a4d8f,color:#fff
+    classDef result fill:#1a8f4d,color:#fff,stroke:#0a5f2d,stroke-width:2px

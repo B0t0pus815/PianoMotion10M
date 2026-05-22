@@ -1,0 +1,46 @@
+%% Dual-Track Decoupling Architecture — thesis ch3 figure
+%% Render: mmdc -i figures/dual_track_architecture.mmd -o figures/dual_track_architecture.svg
+%%         (npm i -g @mermaid-js/mermaid-cli)
+
+flowchart TB
+    MIDI([MIDI Score]):::input
+
+    subgraph LT [<b>Logic Track</b> · deterministic judge]
+        direction TB
+        ArLSTM[ArLSTM<br/>Ramoneda 2022<br/>PIG-finetuned]:::primary
+        ArLSTM_alt[/pianoplayer DP<br/>Parncutt 1997/]:::alt
+    end
+
+    subgraph VT [<b>Visual Track</b> · anatomy renderer]
+        direction TB
+        biomech[biomech v4<br/>Viterbi + IK<br/>locked 2026-05-15]:::neutral
+    end
+
+    fingering[/per-note hand-finger<br/>decisions/]:::data
+    motion[/MANO 3D pose<br/>trajectory/]:::data
+
+    StageB[Stage B<br/>simple_natural.py<br/>--fingering arlstm]:::stage
+    rendered([rendered mp4<br/>正確指法 + anatomical 渲染]):::output
+
+    StageC[Stage C<br/>PracticeScreen<br/>+ WebSocket feedback]:::stage
+    student([student practices<br/>in browser]):::output
+
+    MIDI --> ArLSTM
+    MIDI -.ablation.-> ArLSTM_alt
+    MIDI --> biomech
+
+    ArLSTM --> fingering
+    biomech --> motion
+    fingering --> StageB
+    motion --> StageB
+    StageB --> rendered
+    rendered --> StageC
+    StageC --> student
+
+    classDef input fill:#1a4d8f,color:#fff,stroke:#0a2d5f
+    classDef output fill:#1a8f4d,color:#fff,stroke:#0a5f2d
+    classDef primary fill:#3b6db8,color:#fff,stroke:#1a4d8f
+    classDef alt fill:#aaa,color:#222,stroke:#666,stroke-dasharray:3 3
+    classDef neutral fill:#d4a017,color:#222,stroke:#8f6d00
+    classDef stage fill:#9f1f1f,color:#fff,stroke:#5f0f0f
+    classDef data fill:#fff,color:#222,stroke:#1a4d8f,stroke-width:2px

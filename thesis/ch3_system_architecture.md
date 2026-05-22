@@ -21,38 +21,11 @@ biomech v4 是基於 PianoMotion10M (Liu et al., 2024) 的 diffusion 模型 + �
 
 ## 3.2 Dual-Track Decoupling 架構
 
-針對上述問題，本論文提出 **Dual-Track Decoupling**：把示範與判分職責徹底拆開，由兩個獨立的 deterministic 來源各自負責。
+針對上述問題，本論文提出 **Dual-Track Decoupling**：把示範與判分職責徹底拆開，由兩個獨立的 deterministic 來源各自負責。整體架構如圖 3.1：
 
-```
-       ┌────────────────────────────────────────┐
-       │                MIDI 樂譜                │
-       └────────┬────────────────────┬───────────┘
-                │                    │
-                ▼                    ▼
-       ┌────────────────┐   ┌──────────────────┐
-       │  Logic Track   │   │   Visual Track   │
-       │   (judge)      │   │   (renderer)     │
-       │                │   │                  │
-       │   ArLSTM       │   │    biomech v4    │
-       │ (Ramoneda22)   │   │   (Phase A)      │
-       └────────┬───────┘   └─────────┬────────┘
-                │                     │
-                │ per-note 指法決策    │ 手部 3D 姿態
-                │                     │
-                └──────────┬──────────┘
-                           │
-                           ▼
-                ┌──────────────────────┐
-                │  Stage B 渲染合成     │
-                │  (simple_natural.py) │
-                └──────────┬───────────┘
-                           │
-                           ▼
-                ┌──────────────────────┐
-                │ Stage C UI 接軌       │
-                │ (PracticeScreen)     │
-                └──────────────────────┘
-```
+![圖 3.1：Dual-Track Decoupling 架構。Logic Track 用 deterministic 神經模型決策指法，Visual Track 用 biomech v4 渲染手部姿態，兩者在 Stage B 合成。](../figures/dual_track_architecture.svg)
+
+(若 SVG 未渲染，請參考 `figures/dual_track_architecture.mmd` 的 Mermaid 源碼或執行 `mmdc -i figures/dual_track_architecture.mmd -o figures/dual_track_architecture.svg` 生成。)
 
 **Logic Track (判官)**：deterministic 指法決策器，採用 Ramoneda et al. 2022 預訓練 ArLSTM。輸入 MIDI 輸出 per-note (hand, finger) 決策，**與生成模型完全解耦**——同一 MIDI 永遠得到同一指法決策。
 
@@ -161,6 +134,10 @@ python simple_natural.py \
 10 個 onset 的 sample run 沒有錯誤，PracticeScreen 載入 ArLSTM 渲染的影片並接收 WebSocket feedback events 正常。
 
 ## 3.6 Pipeline Summary
+
+整體 Stage A → B → C 資料流如圖 3.2：
+
+![圖 3.2：Stage A → B → C 整體 pipeline。MIDI 經 Stage A 取得指法決策，Stage B 注入到渲染管線並產出 mp4，Stage C 把 mp4 接到 PracticeScreen 並由 runner 透過 WebSocket 推送 per-onset 判官事件。](../figures/stage_pipeline.svg)
 
 把三個 Stage 整理成一張表：
 
