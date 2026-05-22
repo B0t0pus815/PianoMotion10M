@@ -127,6 +127,10 @@ LH 結果呈現極端不平衡：ArLSTM 在 neutral subset 上幾乎完美 (39/4
 
 ## 4.5 Finger Distribution 分析
 
+![整曲 Canon (344 notes) 兩手指法分布對比](../figures/finger_dist_combined.png)
+
+*圖 4.1：Canon in D 全曲指法分布對比。左右手分別 237 / 107 notes。LH ring 在 pianoplayer 中僅 2 次（幾乎看不見的 bar），ArLSTM 使用 14 次（+600%）。RH pinky 在 pianoplayer 中濫用 66 次，ArLSTM 縮回 26 次（-60%）。*
+
 整曲 (Canon 344 notes) 指法分布揭示了 cost-model 的具體 bias 樣態：
 
 **左手 (107 notes)**：

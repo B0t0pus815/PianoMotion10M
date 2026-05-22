@@ -18,3 +18,8 @@ build/
 
 # pytest cache
 .pytest_cache/
+
+# Python compiled
+*.pyc
+
+# (figures/ is intentionally NOT ignored — committed for thesis-PDF reproducibility)
