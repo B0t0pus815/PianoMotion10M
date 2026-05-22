@@ -9,6 +9,7 @@ simple_natural.py
 不用梯度优化，不会扭曲。
 """
 import os, sys, argparse, json
+from typing import Dict, List, Optional, Tuple
 import numpy as np
 import torch
 import glob
@@ -16,6 +17,11 @@ from scipy.signal import savgol_filter
 from tqdm import tqdm
 
 sys.path.insert(0, '.')
+
+# Route B: biomechanical Viterbi solver (no wrist, pure finger-pair cost)
+from biomechanical_fingering import (
+    FingeringConfig, BiomechanicalCostCalculator, ViterbiFingeringSolver,
+)
 
 FPS = 30
 HAND_SPLIT = 60
@@ -170,6 +176,284 @@ def extract_events(per_frame, hand_key, total_frames):
             events.append((f, pitches))
         last_pitches = pitches
     return events
+
+
+def plan_fingering_nearest(events, offsets, is_right, lookahead: int = 4):
+    """Geometric nearest with windowed hand-center anchor (v2).
+
+    For each event, the wrist anchor is the MEDIAN target pixel of the surrounding
+    [-lookahead, +lookahead] events. This decouples the wrist from each individual
+    note's finger choice — without it, whichever finger plays first self-reinforces
+    (wrist follows that finger → next nearby target is closest to the SAME finger).
+
+    Within a stable phrase (notes close in pitch), the wrist sits in one place and
+    all 5 fingers naturally reach their respective ranges:
+       thumb (offset_min)  → lowest notes (for right hand)
+       index               → low-mid
+       middle              → middle of phrase
+       ring                → mid-high
+       pinky (offset_max)  → highest
+
+    Each note picks the finger whose natural pixel position (wrist_anchor + offset[f])
+    is closest to its target → balanced finger usage, especially middle.
+    """
+    fmaps = []
+    if not events:
+        return fmaps
+
+    # Pre-compute target pixel for each event (center note of chord, or only note)
+    event_targets = []
+    for (_, pitches) in events:
+        sorted_p = sorted(pitches)
+        center_p = sorted_p[len(sorted_p) // 2]
+        event_targets.append(pitch_to_pixel(center_p))
+    event_targets = np.array(event_targets, dtype=np.float32)
+
+    for i, (frame, pitches) in enumerate(events):
+        sorted_p = sorted(pitches)
+        center_p = sorted_p[len(sorted_p) // 2]
+        target = event_targets[i]
+
+        # Windowed median anchor — robust to outliers, stays in current phrase
+        lo, hi = max(0, i - lookahead), min(len(events), i + lookahead + 1)
+        wrist_anchor = float(np.median(event_targets[lo:hi]))
+
+        natural_xs = wrist_anchor + offsets  # 5 finger pixel positions
+        if len(pitches) > 1:
+            # Chord: Hungarian assignment — minimize total finger-to-target distance
+            # so each note goes to the closest *available* finger.
+            try:
+                from scipy.optimize import linear_sum_assignment
+                pitch_list = list(pitches)
+                cost = np.abs(natural_xs[None, :] - np.array(
+                    [pitch_to_pixel(p) for p in pitch_list])[:, None])
+                row_ind, col_ind = linear_sum_assignment(cost)
+                chord_fmap = {pitch_list[r]: FINGER_LIST[c]
+                              for r, c in zip(row_ind, col_ind)}
+            except Exception:
+                # fallback to musical interval-based assignment
+                chord_fmap = assign_fingers(pitches, is_right)
+            fmaps.append(chord_fmap)
+        else:
+            distances = np.abs(natural_xs - target)
+            best_idx = int(np.argmin(distances))
+            fmaps.append({center_p: FINGER_LIST[best_idx]})
+    return fmaps
+
+
+MAX_HAND_SPAN_SEMITONES = 13   # adult pianist 1↔5 reach: octave + minor 2nd
+
+
+def _make_feasible_chord(pitches_sorted):
+    """Reduce a chord to one a single hand can physically play.
+
+    Two sequential defences:
+
+    [Plan A.1] Count cap — solver has 5 fingers max. If >5 notes, keep min, max,
+               and 3 evenly-spaced inner pitches.
+
+    [Plan A.2] Span cap — even ≤5 notes can exceed a single-hand reach when
+               sustain-pedal makes consecutive notes appear simultaneous
+               (e.g. bass + melody glued together with 16-semitone span).
+               Physical limit = MAX_HAND_SPAN_SEMITONES (13). While the
+               current span exceeds it, drop the note farthest from the
+               median of remaining pitches — simulates a player releasing
+               the most outlying ringing note.
+
+    Always returns sorted-ascending; downstream code can rely on order.
+    """
+    n = len(pitches_sorted)
+
+    # ── A.1: count cap ──
+    if n > 5:
+        lo_pitch = pitches_sorted[0]
+        hi_pitch = pitches_sorted[-1]
+        inner = pitches_sorted[1:-1]                   # len = n - 2 (≥ 4 here)
+        m = len(inner)
+        chosen_inner = [inner[int((i + 0.5) * m / 3)] for i in range(3)]
+        kept = [lo_pitch] + chosen_inner + [hi_pitch]
+    else:
+        kept = list(pitches_sorted)
+
+    # ── A.2: span cap ──
+    while len(kept) > 1 and (kept[-1] - kept[0]) > MAX_HAND_SPAN_SEMITONES:
+        # median of remaining pitches
+        median = kept[len(kept) // 2]
+        # drop whichever end is farther from the median (simulates releasing
+        # the most-outlying ringing note)
+        if abs(kept[0] - median) > abs(kept[-1] - median):
+            kept = kept[1:]
+        else:
+            kept = kept[:-1]
+
+    return kept
+
+
+def apply_biomech_fingering(events, is_right):
+    """Route B integration: run the biomechanical Viterbi solver over `events`
+    and return fmaps in the SAME shape as plan_fingering_dp / plan_fingering_nearest
+    (list of {pitch: finger_name_str}, one entry per event).
+
+    Pipeline:
+      1. Phrase-split: where event[i].start_frame - event[i-1].start_frame > FPS
+         (i.e. >1 second between onsets), break the sequence. The solver only
+         sees biomechanically-meaningful continuations.
+      2. Chord-grouping: each event already encodes simultaneously-active pitches
+         as a frozenset → convert to sorted list for the solver.
+      3. Solve each phrase independently with FingeringConfig(hand=...).
+      4. Unpack each Tuple[int,...] back into {pitch: FINGER_LIST[idx-1]}.
+         Solver returns fingers in the same pitch-sorted order it received them,
+         so we zip with the sorted pitch list.
+
+    Note: `events` and the offsets/anatomy in this file are no longer needed —
+    the biomech solver is wrist-free and uses its own anatomy tables. We keep
+    the `events` signature for drop-in compatibility with the existing flow.
+    """
+    hand = 'right' if is_right else 'left'
+    # Client-side override: bias the Viterbi away from single-finger dominance.
+    # Defaults in biomechanical_fingering.py are untouched per Route B spec;
+    # we inject this tuning ONLY for the simple_natural integration.
+    cfg = FingeringConfig(
+        hand=hand,
+        base_repeated_penalty=150.0,    # 極度懲罰同指換音，強迫輪替手指
+        alpha=3.0,                      # 降低二次跨度懲罰，鼓勵手指張開
+        thumb_cross_base_penalty=2.0,   # 降低大拇指基礎穿指門檻
+        thumb_cross_per_semitone=1.5,   # 降低穿指時的半音距離懲罰
+    )
+    calc = BiomechanicalCostCalculator(cfg)
+    solver = ViterbiFingeringSolver(calc)
+
+    PHRASE_GAP_FRAMES = FPS  # >1 second onset gap → phrase break
+
+    # Group events into phrases
+    phrases = []           # list of (start_event_idx, end_event_idx) pairs
+    if events:
+        cur_start = 0
+        for i in range(1, len(events)):
+            gap = events[i][0] - events[i - 1][0]
+            if gap > PHRASE_GAP_FRAMES:
+                phrases.append((cur_start, i))
+                cur_start = i
+        phrases.append((cur_start, len(events)))
+
+    fmaps = [None] * len(events)
+    for (lo, hi) in phrases:
+        # ── Plan A: Pre-process — make every event physically feasible ──
+        # Real MIDI extraction sometimes glues overlapping notes into chords
+        # that no human hand can play (too many notes OR span > one hand).
+        # Send the solver a physically-feasible reduction; we'll fill the
+        # omitted notes back in post-process by nearest-pitch finger.
+        phrase_events_orig = [sorted(events[i][1]) for i in range(lo, hi)]
+        phrase_events_kept = [_make_feasible_chord(p) for p in phrase_events_orig]
+
+        try:
+            result = solver.solve(phrase_events_kept)   # List[Tuple[int, ...]]
+        except ValueError:
+            # ── Plan B: Per-event fallback (shrink blast radius) ──
+            # The phrase-level solver failed (a transition between two events
+            # is infeasible even after Plan A). Don't poison the whole phrase
+            # with middle-finger fallback — re-solve each event in isolation
+            # so the rest of the phrase keeps its proper Viterbi-decoded
+            # fingering. Only events that fail *even alone* get [3]*n.
+            result = []
+            n_failed = 0
+            for ev in phrase_events_kept:
+                try:
+                    single = solver.solve([ev])           # 1-event "phrase"
+                    result.append(single[0])
+                except ValueError:
+                    result.append(tuple([3] * len(ev)))   # last-resort middle
+                    n_failed += 1
+            if n_failed:
+                print(f'[apply_biomech_fingering] {n_failed}/{len(phrase_events_kept)} '
+                      f'event(s) in this phrase fell back to middle finger '
+                      f'(per-event fallback, not whole-phrase).')
+
+        # ── Post-process: unpack solver result + fill omitted notes ──
+        for offset, finger_tuple in enumerate(result):
+            ev_idx = lo + offset
+            kept     = phrase_events_kept[offset]
+            original = phrase_events_orig[offset]
+
+            # 1) Kept notes → direct solver assignment
+            kept_to_finger = {
+                p: FINGER_LIST[fi - 1]            # int 1..5 → 'thumb'/'index'/...
+                for p, fi in zip(kept, finger_tuple)
+            }
+
+            # 2) Omitted notes → copy the finger of the nearest-by-pitch kept note
+            #    (physically: one finger straddles two adjacent keys)
+            fmap = dict(kept_to_finger)
+            for p in original:
+                if p in kept_to_finger:
+                    continue
+                nearest_kept = min(kept_to_finger, key=lambda kp: abs(kp - p))
+                fmap[p] = kept_to_finger[nearest_kept]
+
+            fmaps[ev_idx] = fmap
+
+    return fmaps
+
+
+def apply_arlstm_fingering(events, is_right, midi_path, frame_tol=5):
+    """Stage B: replace biomech v4's Viterbi solver with Ramoneda 2022 ArLSTM.
+
+    Drop-in compatible with apply_biomech_fingering — returns list of
+    {pitch: finger_name_str}, one entry per event. Alignment between
+    ArLSTM's per-note (time_sec, pitch) output and the (frame, pitches)
+    events is done via (round(time*FPS), pitch) lookup with ±frame_tol
+    slack. Notes for which ArLSTM has no prediction fall back to the
+    biomech v4 solver — this matters for the rare 6+ note chord case
+    that ArLSTM was not trained on (PIG has at most 5 simultaneous notes).
+    """
+    hand = 'right' if is_right else 'left'
+    try:
+        from ramoneda_predict import predict as _arlstm_predict
+        fingers, info = _arlstm_predict(midi_path, hand=hand, kind='ArLSTM')
+    except (ImportError, RuntimeError, FileNotFoundError):
+        # External Ramoneda repo missing OR no notes for this hand — fully delegate.
+        return apply_biomech_fingering(events, is_right)
+
+    # (frame_idx, pitch) → finger_name
+    lookup: Dict[Tuple[int, int], str] = {}
+    pitch_frames: Dict[int, List[Tuple[int, str]]] = {}
+    for (t, p), f in zip(info, fingers):
+        frame_idx = int(round(float(t) * FPS))
+        p = int(p)
+        name = FINGER_LIST[int(f) - 1]
+        lookup[(frame_idx, p)] = name
+        pitch_frames.setdefault(p, []).append((frame_idx, name))
+
+    fmaps: List[Optional[dict]] = [None] * len(events)
+    biomech_fallback = None  # lazy — only build if we need fallback
+
+    for ev_idx, (ev_frame, ev_pitches) in enumerate(events):
+        fmap: Dict[int, str] = {}
+        misses: List[int] = []
+        for p in sorted(ev_pitches):
+            name = lookup.get((ev_frame, int(p)))
+            if name is None:
+                # ±frame_tol slack for jitter between MIDI parsers
+                cands = pitch_frames.get(int(p), [])
+                if cands:
+                    nearest = min(cands, key=lambda x: abs(x[0] - ev_frame))
+                    if abs(nearest[0] - ev_frame) <= frame_tol:
+                        name = nearest[1]
+            if name is None:
+                misses.append(int(p))
+            else:
+                fmap[int(p)] = name
+
+        if misses:
+            if biomech_fallback is None:
+                biomech_fallback = apply_biomech_fingering(events, is_right)
+            bm = biomech_fallback[ev_idx] or {}
+            for p in misses:
+                fmap[p] = bm.get(p, 'middle')
+
+        fmaps[ev_idx] = fmap
+
+    return fmaps
 
 
 def plan_fingering_dp(events, offsets, is_right,
@@ -394,6 +678,18 @@ def main():
     parser.add_argument('--midi', type=str, default=None, help='直接用 MIDI 文件 (比 MP3 提取更准)')
     parser.add_argument('--out_dir', type=str, default='./results/ik_output')
     parser.add_argument('--out_video', type=str, default='./results/ik_output_kb.mp4')
+    parser.add_argument('--fingering',
+                        choices=['dp', 'nearest', 'biomech', 'arlstm'], default='dp',
+                        help='dp      = Viterbi minimizing wrist movement (default). '
+                             'nearest = greedy by geometric distance — each note goes '
+                             '          to the finger whose natural pixel position is '
+                             '          closest to the target key. '
+                             'biomech = Route B: wrist-free biomechanical Viterbi '
+                             '          (stretch + crossing + repeated + terrain cost). '
+                             '          Phrase-split at >1s onset gaps. '
+                             'arlstm  = Stage B: Ramoneda 2022 SOTA neural model '
+                             '          (pretrained ArLSTM, PIG-finetuned). Falls back '
+                             '          to biomech for 6+ note chords.')
     args = parser.parse_args()
     
     # 1. 提取 MIDI
@@ -479,12 +775,26 @@ def main():
     OFFSET_R = med_r_tip_xs - wrist_screen_x(med_r, True)
     OFFSET_L = med_l_tip_xs - wrist_screen_x(med_l, False)
 
-    # 全局 DP 排指 (Viterbi over events)
-    print("  DP 排指...")
+    # 全局排指 (DP / 几何最近指)
+    print(f"  排指 ({args.fingering})...")
     events_r = extract_events(per_frame, 'right', frame_num)
     events_l = extract_events(per_frame, 'left',  frame_num)
-    fmaps_r  = plan_fingering_dp(events_r, OFFSET_R, True)
-    fmaps_l  = plan_fingering_dp(events_l, OFFSET_L, False)
+    if args.fingering == 'biomech':
+        # Route B: wrist-free biomechanical Viterbi. Hands are processed
+        # independently per spec — right hand notes only, then left hand only.
+        fmaps_r = apply_biomech_fingering(events_r, is_right=True)
+        fmaps_l = apply_biomech_fingering(events_l, is_right=False)
+    elif args.fingering == 'arlstm':
+        # Stage B: Ramoneda 2022 ArLSTM. clean_midi_path was written above
+        # from midi_data so ArLSTM sees the same notes the renderer will.
+        fmaps_r = apply_arlstm_fingering(events_r, True, clean_midi_path)
+        fmaps_l = apply_arlstm_fingering(events_l, False, clean_midi_path)
+    elif args.fingering == 'nearest':
+        fmaps_r = plan_fingering_nearest(events_r, OFFSET_R, True)
+        fmaps_l = plan_fingering_nearest(events_l, OFFSET_L, False)
+    else:
+        fmaps_r = plan_fingering_dp(events_r, OFFSET_R, True)
+        fmaps_l = plan_fingering_dp(events_l, OFFSET_L, False)
     fmap_lookup_R = build_fmap_lookup(events_r, fmaps_r, per_frame, 'right', frame_num)
     fmap_lookup_L = build_fmap_lookup(events_l, fmaps_l, per_frame, 'left',  frame_num)
 

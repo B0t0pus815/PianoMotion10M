@@ -40,11 +40,14 @@ ALPHA_THRESHOLD = 0.03  # 低于此值视为完全熄灭
 def compute_alpha(t_since_onset: float,
                   t_full: float = T_FULL_DEFAULT,
                   tau: float = TAU_DEFAULT) -> float:
-    """指数衰减: 前 t_full 秒全亮 1.0, 之后 alpha = exp(-(t-t_full)/τ)."""
+    """指数衰减: 前 t_full 秒全亮 1.0, 之后 alpha = exp(-(t-t_full)/τ).
+    τ <= 0 → 二值模式: 超过 t_full 直接熄灭 (无渐变)."""
     if t_since_onset < 0:
         return 0.0
     if t_since_onset <= t_full:
         return 1.0
+    if tau <= 0:
+        return 0.0
     return math.exp(-(t_since_onset - t_full) / tau)
 
 # 手指编号: 拇指=1, 食指=2, 中指=3, 无名指=4, 小指=5
@@ -424,8 +427,8 @@ def make_video(out_dir: str, mp3_path: str, out_video: str):
             f.write(f"file '{os.path.abspath(out_dir)}/{fr}'\n")
 
     cmd = (f'ffmpeg -y -r {FPS} -f concat -safe 0 -i {list_file} '
-           f'-i "{mp3_path}" -c:v libopenh264 -c:a aac -pix_fmt yuv420p '
-           f'-shortest "{out_video}"')
+           f'-i "{mp3_path}" -c:v libx264 -preset medium -crf 23 '
+           f'-c:a aac -pix_fmt yuv420p -shortest "{out_video}"')
     ret = os.system(cmd)
     if ret != 0:
         raise RuntimeError(f'ffmpeg failed (exit {ret})')
