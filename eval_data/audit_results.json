@@ -1,0 +1,104 @@
+{
+  "_about": "Frozen snapshot of corpus-level audit results reported in thesis ch4. Regenerate via bin/regenerate_all.sh; manually update this file if numbers shift.",
+  "_generated_on": "2026-05-22",
+  "_song": "Canon in D (Pachelbel, EASY tutorial)",
+  "_midi": "input_songs/Canon In D - Pachelbel  EASY Piano Tutorial.mid",
+  "_thesis_section": "ch4 §4.4",
+  "_method_summary": {
+    "gt_source": "build_gt_rulebased.py (interval rules + stepwise continuity + predictor consensus, with arlstm-tiebreaker for rule-ambiguous cases)",
+    "metrics": "Hard (exact list match) and Soft (mean per-finger with ±1 = 0.5 credit)",
+    "neutral_subset_definition": "Exclude GT entries whose decision='arlstm-tiebreaker' (avoids self-favoring bias against ArLSTM)"
+  },
+
+  "right_hand": {
+    "n_buckets_total": 217,
+    "n_gt_entries_full": 186,
+    "n_gt_entries_neutral": 143,
+    "n_artifact_skipped": 31,
+    "decision_breakdown": {
+      "predictor-consensus": 64,
+      "single-note-rule": 58,
+      "arlstm-tiebreaker": 43,
+      "user-curated": 12,
+      "chord-rule(interval=4)": 4,
+      "chord-rule(interval=3)": 4,
+      "chord-rule(interval=5)": 1
+    },
+    "results_full": {
+      "ArLSTM":      {"hard": 0.586, "soft": 0.737},
+      "ArGNN":       {"hard": 0.333, "soft": 0.560},
+      "pianoplayer": {"hard": 0.392, "soft": 0.577},
+      "motion_v4":   {"hard": 0.226, "soft": 0.378}
+    },
+    "results_neutral": {
+      "ArLSTM":      {"hard": 0.587, "soft": 0.741},
+      "ArGNN":       {"hard": 0.336, "soft": 0.572},
+      "pianoplayer": {"hard": 0.510, "soft": 0.663},
+      "motion_v4":   {"hard": 0.252, "soft": 0.411}
+    }
+  },
+
+  "left_hand": {
+    "n_buckets_total": 100,
+    "n_gt_entries_full": 90,
+    "n_gt_entries_neutral": 40,
+    "n_artifact_skipped": 10,
+    "decision_breakdown": {
+      "arlstm-tiebreaker": 50,
+      "single-note-rule": 30,
+      "predictor-consensus": 9,
+      "chord-rule(interval=16)": 1
+    },
+    "results_full": {
+      "ArLSTM":      {"hard": 0.967, "soft": 0.974},
+      "ArGNN":       {"hard": 0.833, "soft": 0.904},
+      "pianoplayer": {"hard": 0.100, "soft": 0.246},
+      "motion_v4":   {"hard": 0.144, "soft": 0.286}
+    },
+    "results_neutral": {
+      "ArLSTM":      {"hard": 0.975, "soft": 0.975},
+      "ArGNN":       {"hard": 0.850, "soft": 0.919},
+      "pianoplayer": {"hard": 0.225, "soft": 0.275},
+      "motion_v4":   {"hard": 0.000, "soft": 0.175}
+    }
+  },
+
+  "combined_rh_lh_neutral_subset": {
+    "_note": "Weighted by entry count (RH n=143, LH n=40, total n=183). Headline number for thesis defense.",
+    "n": 183,
+    "results": {
+      "ArLSTM":      {"soft": 0.792, "vs_arlstm_relative": "—"},
+      "ArGNN":       {"soft": 0.654, "vs_arlstm_relative": "-17%"},
+      "pianoplayer": {"soft": 0.578, "vs_arlstm_relative": "-27%"},
+      "motion_v4":   {"soft": 0.358, "vs_arlstm_relative": "-55%"}
+    }
+  },
+
+  "finger_distribution_canon_full": {
+    "right_hand_n_notes": 237,
+    "left_hand_n_notes": 107,
+    "right_hand": {
+      "pianoplayer": {"thumb": 46, "index": 57, "middle": 49, "ring": 19, "pinky": 66},
+      "ArLSTM":      {"thumb": 61, "index": 57, "middle": 54, "ring": 39, "pinky": 26}
+    },
+    "left_hand": {
+      "pianoplayer": {"thumb": 43, "index": 23, "middle": 22, "ring": 2,  "pinky": 17},
+      "ArLSTM":      {"thumb": 20, "index": 28, "middle": 29, "ring": 14, "pinky": 16}
+    },
+    "_note": "LH ring atrophy (pianoplayer 2 vs ArLSTM 14) is the most visually striking evidence of Parncutt cost model's structural bias. See figures/finger_dist_combined.png."
+  },
+
+  "cross_piece_validation": {
+    "song": "菊次郎的夏天 (Joe Hisaishi, Summer)",
+    "midi": "input_songs/[Piano Cover] 久石讓 Joe Hisaishi - 菊次郎的夏天(Summer)一聽前奏就知道的旋律_extracted.mid",
+    "pipeline_status": "Stage A → B → C end-to-end success on first run",
+    "output_video": "results/summer_arlstm_kb.mp4",
+    "no_corpus_audit": "Summer doesn't have hand-labeled GT; smoke test only."
+  },
+
+  "regression_pins": {
+    "_about": "Tests in tests/test_evaluate_template.py assert these exact values.",
+    "rh_gt_entry_count": 186,
+    "lh_gt_entry_count": 90
+  }
+}
