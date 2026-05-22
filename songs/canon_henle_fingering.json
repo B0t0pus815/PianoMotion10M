@@ -1,0 +1,23 @@
+{
+  "_about": "Sample manual fingering override (Henle-style teacher's answer key) for Canon in D RH first 12 onsets. Mirrors eval_data/canon_rh_gt.json's manually-curated fingerings. NOT auto-applied — see _activation below.",
+  "_activation": "To activate: copy this file (or symlink) next to the target MIDI as '<midi_basename>_fingering.json'. e.g. cp songs/canon_henle_fingering.json 'input_songs/Canon In D - Pachelbel  EASY Piano Tutorial_fingering.json'. Then run any pipeline (--fingering arlstm or pianoplayer or biomech) and the override will take precedence over the algorithmic decision for the matching (time, pitch) entries.",
+  "_key_format": "'<time_rounded_2>_<pitch>': {'hand': 'right'|'left' (optional), 'finger': 'thumb'|'index'|'middle'|'ring'|'pinky' (optional)}",
+  "_source": "eval_data/canon_rh_gt.json (12 user-curated entries from Stage A initial GT)",
+
+  "27.86_78": {"hand": "right", "finger": "pinky"},
+  "29.63_76": {"hand": "right", "finger": "ring"},
+  "31.40_74": {"hand": "right", "finger": "middle"},
+  "33.16_73": {"hand": "right", "finger": "index"},
+  "34.93_71": {"hand": "right", "finger": "thumb"},
+  "36.69_69": {"hand": "right", "finger": "middle"},
+  "38.45_71": {"hand": "right", "finger": "index"},
+  "40.22_73": {"hand": "right", "finger": "middle"},
+  "41.98_74": {"hand": "right", "finger": "thumb"},
+  "41.98_78": {"hand": "right", "finger": "pinky"},
+  "43.75_73": {"hand": "right", "finger": "thumb"},
+  "43.75_76": {"hand": "right", "finger": "ring"},
+  "45.51_71": {"hand": "right", "finger": "thumb"},
+  "45.51_74": {"hand": "right", "finger": "middle"},
+  "47.28_69": {"hand": "right", "finger": "thumb"},
+  "47.28_73": {"hand": "right", "finger": "ring"}
+}
