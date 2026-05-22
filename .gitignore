@@ -12,3 +12,6 @@ __pycache__/
 
 # error-triggered clip recorder outputs
 clips/
+
+# thesis build artifacts (pandoc / marp output)
+build/
