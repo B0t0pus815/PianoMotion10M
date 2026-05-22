@@ -15,3 +15,6 @@ clips/
 
 # thesis build artifacts (pandoc / marp output)
 build/
+
+# pytest cache
+.pytest_cache/
