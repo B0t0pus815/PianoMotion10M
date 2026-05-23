@@ -171,6 +171,10 @@ Summer 與 Canon 在 genre (J-pop vs Baroque)、texture (簡潔旋律 vs 複音�
 
 Bach Invention 是 cross-piece audit 的關鍵案例：texture 完全 polyphonic、RH 充滿連續 16 分音符 scalar 段落、跟 PIG 訓練集中常見的鋼琴小品差異大。458 個 notes (RH 332 + LH 126)。
 
+![Bach Invention No.1 兩手 finger distribution。RH pp 用 thumb 104 次（scalar thumb-under transitions 反映 Parncutt cost model 的設計場景），ring 仍 atrophy (pp 13 vs ArLSTM 51)。LH 上 pp ring=11 vs ArLSTM ring=23，bias 比 Canon 較弱但方向一致。](../figures/bach/finger_dist_combined.png)
+
+*圖 4.2：Bach Invention No.1 全曲指法分布對比。整體分布印證 cost-model 在 scalar passages 上 thumb-heavy + ring-atrophy 的特徵；ArLSTM 分布較均勻但在 RH 上 Hard/Soft 反而低，揭示 corpus-level 數字背後的分布與 pedagogical correctness 不一定一致。*
+
 **Bach RH (n=122 neutral subset)**：
 
 | Track | Hard | Soft |
