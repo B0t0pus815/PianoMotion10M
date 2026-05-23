@@ -10,16 +10,18 @@
 
 **RQ2（選擇問題）**：在多個候選指法決策來源中，哪一個最適合擔任 Logic Track？
 
-**答**：Ramoneda 2022 ArLSTM。corpus-level (n=183 RH+LH neutral subset on Canon) 評估顯示：
+**答**：**Style-dependent**。Canon RH+LH (n=183 neutral subset) 與 Bach LH (n=78 neutral) 上 ArLSTM 大幅勝過所有 baseline：
 
-| Track | Soft Accuracy | 相對 ArLSTM gap |
+| Track | Canon RH+LH Soft | Bach LH Soft |
 |---|---|---|
-| **ArLSTM** | **0.792** | — |
-| ArGNN | 0.654 | -17% |
-| pianoplayer | 0.578 | -27% |
-| motion_v4 | 0.358 | -55% |
+| **ArLSTM** | **0.792** | **0.878** |
+| ArGNN | 0.654 | 0.859 |
+| pianoplayer | 0.578 | 0.391 |
+| motion_v4 | 0.358 | (no fingertips) |
 
-LH 上 pianoplayer 的 Soft Accuracy 僅 0.275，呈現 systematic-failure 樣態（不是「弱於 ArLSTM」，而是「接近 random」），為 cost-model 對 LH ring finger 的結構性 atrophy 提供直接證據。Cross-piece (Summer) 驗證 pipeline 不過擬合於 Canon。
+但 Bach RH (n=122 neutral) 上 **pianoplayer 反超** (Soft 0.734 vs ArLSTM 0.406)，因為 Bach RH 連續 16 分音符 scalar 段落正好是 Parncutt cost model 設計時的核心場景。
+
+**結論**：將 ArLSTM 設為 default（適配大多數教學曲目的 chordal/homophonic 段落 + 所有 bass line），但保留 pianoplayer 作為 `--fingering-source pianoplayer` 可選方案（適配 scalar-dominant 段落如 Bach inventions、Czerny 練習曲）。Logic Track **本來就是** runtime-switchable 的，這個彈性設計剛好涵蓋 cross-style 需求。LH 上 pianoplayer 的 Soft 在兩首曲子都 < 0.4，呈現 systematic-failure 樣態（不是「弱於 ArLSTM」，而是「接近 random」）——為 cost-model 對 LH ring finger 的結構性 atrophy 提供跨樂曲一致證據。
 
 **RQ3（教學閉環問題）**：能否把上述系統做成學生可以實際使用的工具？
 
@@ -61,7 +63,8 @@ LH 上 pianoplayer 的 Soft Accuracy 僅 0.275，呈現 systematic-failure 樣�
 
 ### 7.4.1 短期 (1–3 個月)
 
-1. **拓展 cross-piece 驗證**：再選 Bach Invention No.1 (polyphonic)、Mozart Sonata K545 第一樂章 (homophonic + 跨手) 兩首作為 thesis-defense 補充 demo。其中 Bach polyphonic 可能讓 ArGNN 反超 ArLSTM——這是 paper-grade 的有趣 finding
+1. **Style-aware Logic Track 自動切換**：基於本論文 Bach Invention audit 揭示的 cross-style 行為差異，下一步是研究**自動偵測樂曲 texture 並切換 fingering source**。例如：用簡單 onset density / pitch variance heuristic 偵測「scalar dominant」段落，自動切到 pianoplayer；其他段落用 ArLSTM。這是 thesis 後直接的下一個 paper grade 工作
+2. **拓展 cross-piece 驗證**：再選 Mozart Sonata K545 第一樂章 (homophonic + 跨手)、Chopin Etude (重技巧過渡) 兩首作為補充。ArGNN 在 Bach polyphonic RH 上**沒有反超 ArLSTM** (0.402 vs 0.406)，所以 polyphonic-aware GNN 在 Two-Part Invention 這種對位 texture 上的優勢需要更複雜的 polyphony 才能 surface
 2. **OSMD 樂譜整合**：Stage D 第一項——把 PracticeScreen 的 placeholder 樂譜換成從 MIDI 即時渲染、標註 ArLSTM 推薦指法的真實樂譜
 3. **Hardware live mode 部署**：插上 webcam 與 MIDI keyboard，驗證 MediaPipe finger detection 在真實光照與真實學生手的 robustness
 4. **Wrist height feedback**：comparator 加入 wrist y-axis trajectory 評估，提供 "手腕太高" / "手腕太低" 的 per-section feedback

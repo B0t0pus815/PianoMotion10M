@@ -50,15 +50,29 @@
 
 ### Q1.4：為什麼用 Canon 而不是更標準的鋼琴 benchmark？
 
-**短答**：Canon 是公版 + 兩手 texture 完整 + 已被 PianoMotion10M 訓練資料覆蓋。
+**短答**：Canon 是公版 + 兩手 texture 完整 + 已被 PianoMotion10M 訓練資料覆蓋；Bach Invention No.1 已加為 cross-piece，揭示了 ArLSTM 不是 universal winner。
 
 **詳答**：
 - Canon in D 是 public domain，沒有版權問題
 - 簡單版本 (EASY tutorial) 兩手都有完整 melodic + chord texture，適合 stress-test fingering decision
-- PianoMotion10M 訓練資料中肯定有 Canon (它是 YouTube 鋼琴影片最常見曲目之一)，所以 biomech v4 在這首上有合理 baseline
-- 對未來，Bach Invention No.1 (polyphonic) 跟 Mozart K545 (homophonic + 跨手) 是建議的下一波 cross-piece
+- PianoMotion10M 訓練資料中肯定有 Canon (它是 YouTube 鋼琴影片最常見曲目之一)
+- **Bach Invention No.1 BWV 772** 已加為第三首 (Public Domain from Mutopia)，揭示 Bach RH scalar 段落上 pianoplayer 反而勝過 ArLSTM (Soft 0.734 vs 0.406)，LH 保持 ArLSTM 領先 (0.878 vs 0.391)。這是誠實的 cross-style 結果
 
-**指向證據**：ch4 4.2.4 節、ch7 7.4.1 未來工作
+**指向證據**：ch4 4.6 節、ch7 7.4.1 未來工作
+
+---
+
+### Q1.5：Bach RH 上 pianoplayer 反而贏，這不是反駁了你的論文嗎？
+
+**短答**：相反——這驗證了我們的 audit framework 有 cross-style sensitivity，且增強了「Logic Track 該保留 runtime-switchable」的架構決策。
+
+**詳答**：
+- Canon-only 的結果可能被 reviewer 質疑「cherry-picked」。Bach 反向結果證明 audit framework 不是 ArLSTM 友善的工具
+- Logic Track 從一開始就設計成 `--fingering-source arlstm | pianoplayer | motion` 可切換——Bach 結果正好給這個彈性 design 一個經驗 motivation
+- ArLSTM 仍然是合理 default：適配 Canon-style homophonic + 所有 LH bass line + Summer J-pop。Bach 兩聲部 invention 是專業 scalar 段落，需要特殊處理
+- 後續工作（ch7 7.4.1）規劃 style-aware 自動切換——這把 Bach 反例變成 future paper 的 motivation，是 strength 不是 weakness
+
+**指向證據**：ch4 4.6.4 修正後的 thesis claim、ch7 7.4.1 style-aware 切換
 
 ---
 

@@ -204,18 +204,21 @@ pianoplayer 在 LH 只用 ring 2 次——這是 cost model 的 **直接 visible
 
 ---
 
-## Cross-piece Validation：Summer
+## Cross-piece Validation：Summer + Bach
 
-第二首 demo 曲（J-pop，跟 Canon 巴洛克風格完全不同）：
+**Summer** (Joe Hisaishi, J-pop)：pipeline 端到端通過，無 GT 數字（pipeline test only）
 
-```bash
-python simple_natural.py --fingering arlstm \
-    --midi Summer.mid --mp3 Summer.mp3 \
-    --out_video results/summer_arlstm_kb.mp4
-```
+**Bach Invention No.1 BWV 772** (Public Domain Mutopia)，n=200 neutral subset：
 
-第一次跑就成功——**pipeline 不是 Canon 過擬合**。
-PracticeScreen 已可切換到 Summer 練習。
+| Track | Bach RH | Bach LH |
+|---|---|---|
+| **pianoplayer** | **Soft 0.734** | Soft 0.391 |
+| **ArLSTM** | Soft 0.406 | **Soft 0.878** |
+| ArGNN | Soft 0.402 | Soft 0.859 |
+
+**ArLSTM 不是 universal winner** — Bach RH 連續 16 分音符 scalar 段落 pianoplayer 反超。LH 維持 ArLSTM 大幅領先。
+
+→ **Logic Track 的 `--fingering-source` runtime switch 設計剛好涵蓋這個 cross-style 需求。**
 
 ---
 
@@ -279,7 +282,10 @@ PracticeScreen 已可切換到 Summer 練習。
 **A**：predictor-neutral subset 已排除所有 arlstm-tiebreaker 條目；剩下 77% 是文獻可引用的 piano-pedagogy rules + predictor consensus。
 
 **Q**：只測 Canon 一首太少？
-**A**：第二首 Summer (跨 genre) 端到端跑通，第三首 Bach 是 future work。整曲 finger distribution 趨勢 (LH ring atrophy) 兩首都呈現。
+**A**：實測三首 (Canon, Summer, Bach Invention)。Bach 揭示 ArLSTM 不是 universal winner，這恰好驗證 audit framework 對 cross-style 差異敏感。
+
+**Q**：Bach 上 pianoplayer 贏了，這不打臉嗎？
+**A**：相反——增強了 Logic Track 該保留 `--fingering-source` runtime switch 的設計決策，並 motivate 後續 style-aware 自動切換 (ch7 7.4.1)。
 
 **Q**：跟單純跑 Ramoneda 2022 有什麼差別？
 **A**：本論文證明 Ramoneda 的指法決策**值得**接進視覺示範系統（Stage A 量化驗證），且**有辦法**接（Stage B/C 工程整合）。把 benchmark model 變 teaching tool。

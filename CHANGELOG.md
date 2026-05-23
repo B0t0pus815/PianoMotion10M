@@ -7,7 +7,37 @@ The "Phase / Stage" labels match the architectural rollout in
 
 ---
 
-## 2026-05-22 (today) — Stage A → B → C 全部關閉 + 7 章 thesis draft
+## 2026-05-23 — Bach Invention cross-piece + 文件套件補完
+
+### Bach Invention No.1 BWV 772 cross-piece audit
+- ✓ 下載 Bach MIDI (Mutopia, Public Domain)
+- ✓ 生成 RH n=181 / LH n=124 rule-based GT
+- ✓ 修 `four_way_audit.py --fingertips` 為 optional
+- ✓ 跑四方 audit (RH + LH × full + neutral)
+- ✓ **Key finding**: pianoplayer 在 Bach RH 反超 (Soft 0.734 vs ArLSTM 0.406)，LH 維持 ArLSTM 大幅領先
+- ✓ ch4 §4.6 重寫成三節（Summer / Bach / 修正後 claim）
+- ✓ ch7 §7.1 RQ2 答案改成 style-dependent
+- ✓ ch7 §7.4.1 加 style-aware Logic Track 自動切換
+- ✓ defense_qa.md 加 Q1.5 (「Bach 反例怎麼解釋」)
+- ✓ defense_slides.md 增加 Bach slide + Bach Q&A
+- ✓ `eval_data/audit_results.json` 加 bach_invention_01 block
+
+### Defense-ready package（昨日）
+- ✓ `tests/` pytest suite (50/50 green; pins ch4 numbers)
+- ✓ `Makefile` — `make thesis | docx | tex | slides | chapter CH=N`
+- ✓ `THESIS.md` repo entry point (links to thesis/, key results, demo commands)
+- ✓ `thesis/defense_slides.md` Marp slide deck (~20 slides)
+- ✓ `thesis/defense_qa.md` predicted reviewer Q&A
+- ✓ `thesis/references.bib` BibTeX (12 entries)
+- ✓ `thesis/README.md` thesis-directory guide
+- ✓ `songs/canon_henle_fingering.json` sample manual override
+- ✓ `bin/regenerate_all.sh` one-shot regeneration script
+- ✓ `bin/demo_defense.sh` tmux-based defense-day launcher
+- ✓ `eval_data/audit_results.json` frozen snapshot
+- ✓ `figures/*.mmd` + finger distribution PNGs
+- ✓ `Makefile` + `THESIS.md` + `CHANGELOG.md`
+
+## 2026-05-22 — Stage A → B → C 全部關閉 + 7 章 thesis draft
 
 ### Defense-ready package
 - ✓ `tests/` pytest suite (50/50 green; pins ch4 numbers)
