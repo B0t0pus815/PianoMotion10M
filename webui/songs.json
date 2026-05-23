@@ -9,7 +9,8 @@
     "popularity": 98,
     "accent": "#4FC3F7",
     "videoUrl": "../results/canon_arlstm_kb.mp4",
-    "audioUrl": "../input_songs/Canon In D - Pachelbel  EASY Piano Tutorial.mp3"
+    "audioUrl": "../input_songs/Canon In D - Pachelbel  EASY Piano Tutorial.mp3",
+    "scoreUrl": "../songs/canon_with_fingering.musicxml"
   },
   {
     "id": "summer",

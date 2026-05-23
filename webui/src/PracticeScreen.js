@@ -591,7 +591,7 @@ function PracticeScreen({ song, onEnd, onBack }) {
             </div>}
       </div>
 
-      {/* Sheet music card (concept placeholder) */}
+      {/* Sheet music card — OSMD if scoreUrl available, else legacy Staff placeholder */}
       <div style={{ padding: '0 20px 12px' }}>
         <div style={{
           padding: '12px 12px 6px', borderRadius: 16,
@@ -602,10 +602,15 @@ function PracticeScreen({ song, onEnd, onBack }) {
             padding: '0 8px 4px',
             fontFamily: HK.fontMono, fontSize: 10, color: HK.textMuted, letterSpacing: 1.3, fontWeight: 600,
           }}>
-            <span>樂譜 · 概念示意</span>
+            <span>{song?.scoreUrl ? '樂譜 · MusicXML (OSMD)' : '樂譜 · 概念示意'}</span>
             <span style={{ color: HK.gold }}>♩ = 76</span>
           </div>
-          <Staff measures={[MEASURE_1, MEASURE_2]}/>
+          <OSMDScore
+            scoreUrl={song?.scoreUrl}
+            highlightTime={elapsed}
+            height={180}
+            fallback={<Staff measures={[MEASURE_1, MEASURE_2]}/>}
+          />
         </div>
       </div>
 

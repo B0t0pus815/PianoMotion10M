@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HandKeys AI — Piano Trainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;500;600&display=swap">
+  <style>
+    html, body { margin: 0; padding: 0; background: #0a1622; color: #fff; }
+    * { box-sizing: border-box; }
+    ::-webkit-scrollbar { width: 0; height: 0; }
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    /* Phone frame shadow on desktop */
+    #root { display: flex; align-items: center; justify-content: center; padding: 24px; }
+    #root > div { box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06); border-radius: 44px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React 18 (development build for clearer errors) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- OpenSheetMusicDisplay (Stage D §6 — renders MusicXML to SVG sheet music) -->
+  <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.8.7/build/opensheetmusicdisplay.min.js"></script>
+
+  <!-- App sources (load order matters — tokens first, then screens, then App) -->
+  <script type="text/babel" data-presets="react" src="src/tokens.js"></script>
+  <script type="text/babel" data-presets="react" src="src/HomeScreen.js"></script>
+  <script type="text/babel" data-presets="react" src="src/SetupScreen.js"></script>
+  <script type="text/babel" data-presets="react" src="src/PianoRoll.js"></script>
+  <script type="text/babel" data-presets="react" src="src/OSMDScore.js"></script>
+  <script type="text/babel" data-presets="react" src="src/PracticeScreen.js"></script>
+  <script type="text/babel" data-presets="react" src="src/ReviewScreen.js"></script>
+  <script type="text/babel" data-presets="react" src="src/HistoryScreen.js"></script>
+  <script type="text/babel" data-presets="react" src="src/ProfileScreen.js"></script>
+  <script type="text/babel" data-presets="react" src="src/App.js"></script>
+</body>
+</html>
