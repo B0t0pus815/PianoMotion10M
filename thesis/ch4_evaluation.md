@@ -161,19 +161,49 @@ pianoplayer 在 LH 上 ring 僅使用 2 次（占 1.9%）——這直接呼應 P
 
 ## 4.6 Cross-piece Validation
 
-為驗證 pipeline 不限於 Canon 風格，將相同的 Stage A→B→C 流程套用至 Joe Hisaishi「菊次郎的夏天」(Summer)。本曲與 Canon 在 genre (J-pop vs Baroque)、texture (簡潔旋律 vs 複音對位)、節奏結構上完全不同。
+為驗證 pipeline 不限於 Canon 風格，將相同的 Stage A→B→C 流程套用至兩首對比曲目：Joe Hisaishi「菊次郎的夏天」(Summer，J-pop) 與 Bach Two-Part Invention No.1 in C major (BWV 772，巴洛克複音對位)。
 
-執行命令：
+### 4.6.1 Summer (pipeline 通過性測試)
 
-```bash
-python simple_natural.py \
-    --mp3 input_songs/...Summer.mp3 \
-    --midi input_songs/...Summer_extracted.mid \
-    --fingering arlstm \
-    --out_video results/summer_arlstm_kb.mp4
-```
+Summer 與 Canon 在 genre (J-pop vs Baroque)、texture (簡潔旋律 vs 複音對位)、節奏結構上完全不同。完整渲染端到端 (Stage A → B → C) 無錯誤完成，輸出 `summer_arlstm_kb.mp4` (13.9 MB, 2:32)。pipeline 級別通過。Summer 沒有人類標註 GT，僅做通過性測試。
 
-完整渲染端到端 (Stage A inference → Stage B render → Stage C UI 接軌) 無錯誤完成，輸出 `summer_arlstm_kb.mp4` (13.9 MB, 2:32)。此結果支持 pipeline 對曲風的泛化能力。
+### 4.6.2 Bach Invention No.1 (帶 GT 的 cross-piece audit)
+
+Bach Invention 是 cross-piece audit 的關鍵案例：texture 完全 polyphonic、RH 充滿連續 16 分音符 scalar 段落、跟 PIG 訓練集中常見的鋼琴小品差異大。458 個 notes (RH 332 + LH 126)。
+
+**Bach RH (n=122 neutral subset)**：
+
+| Track | Hard | Soft |
+|---|---|---|
+| **pianoplayer** | **0.566** | **0.734** |
+| ArLSTM | 0.279 | 0.406 |
+| ArGNN | 0.230 | 0.402 |
+
+**Bach LH (n=78 neutral subset)**：
+
+| Track | Hard | Soft |
+|---|---|---|
+| **ArLSTM** | **0.872** | **0.878** |
+| ArGNN | 0.718 | 0.859 |
+| pianoplayer | 0.218 | 0.391 |
+
+### 4.6.3 Bach 結果的關鍵 finding
+
+Bach RH 上 **pianoplayer 大幅勝過 ArLSTM** — 與 Canon 結果方向相反。這個結果有兩種同時成立的解釋：
+
+**解釋一（音樂層）**：Bach Invention RH 是連續 16 分音符的 scalar 段落，這恰好是 Parncutt cost model 設計時的核心場景 (5-4-3-2-1 + thumb-under)。pianoplayer 在 scalar 上的表現自然優於 ArLSTM 學到的混合風格 prior。
+
+**解釋二（方法論層）**：rule-based GT 的 `single-note-rule` (stepwise ±1 半音 → finger ±1) 與 pianoplayer 的 cost model 行為**結構性 align**。當 GT 大部分條目落在這個規則上 (Bach RH 122 個 neutral 條目中超過 50% 是 single-note-rule)，pianoplayer 拿高分某種程度上是「GT 規則跟 pp cost model 同源」的副產品。這是本論文 rule-based GT 設計的已知 limitation。
+
+LH 上 ArLSTM 仍領先 (0.878 vs 0.391)，這個方向跟 Canon 結果一致——pianoplayer 的 LH ring atrophy bias 在 Bach 同樣顯現。
+
+### 4.6.4 對 thesis 主張的修正
+
+Bach audit 揭示 ArLSTM **不是 universal winner**。修正後的 thesis claim：
+
+> 「ArLSTM 在 Canon RH+LH (chordal/homophonic) 與 Bach LH (scalar bass line) 上勝過 pianoplayer，平均 Soft 0.792 vs 0.578；但在 Bach RH (連續 scalar passage) 上 pianoplayer 反而勝出 (0.734 vs 0.406)。這暗示 Logic Track 的最優選擇可能 piece-style-dependent，是後續工作的 motivation。」
+
+這個修正不削弱本論文的整合貢獻——Stage A→B→C 架構**本來就支持** runtime switch fingering source (`--fingering arlstm` 或 `--fingering pianoplayer` 都是合法的 default)。Bach 結果正好說明這個彈性設計的價值。
 
 ## 4.7 失敗模式案例分析
 

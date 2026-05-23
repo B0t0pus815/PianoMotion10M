@@ -89,11 +89,62 @@
   },
 
   "cross_piece_validation": {
-    "song": "菊次郎的夏天 (Joe Hisaishi, Summer)",
-    "midi": "input_songs/[Piano Cover] 久石讓 Joe Hisaishi - 菊次郎的夏天(Summer)一聽前奏就知道的旋律_extracted.mid",
-    "pipeline_status": "Stage A → B → C end-to-end success on first run",
-    "output_video": "results/summer_arlstm_kb.mp4",
-    "no_corpus_audit": "Summer doesn't have hand-labeled GT; smoke test only."
+    "summer": {
+      "song": "菊次郎的夏天 (Joe Hisaishi, Summer)",
+      "midi": "input_songs/[Piano Cover] 久石讓 Joe Hisaishi - 菊次郎的夏天(Summer)一聽前奏就知道的旋律_extracted.mid",
+      "pipeline_status": "Stage A → B → C end-to-end success on first run",
+      "output_video": "results/summer_arlstm_kb.mp4",
+      "no_corpus_audit": "Summer doesn't have hand-labeled GT; smoke test only."
+    },
+    "bach_invention_01": {
+      "song": "Bach Two-Part Invention No.1 in C major (BWV 772)",
+      "midi": "input_songs/Bach_Invention_01_BWV772.mid",
+      "midi_source": "https://www.mutopiaproject.org/ftp/BachJS/BWV772/bach-invention-01/bach-invention-01.mid",
+      "n_notes_total": 458,
+      "rh": {
+        "n_buckets_total": 302,
+        "n_gt_entries_full": 181,
+        "n_gt_entries_neutral": 122,
+        "n_artifact_skipped": 121,
+        "decision_breakdown": {
+          "predictor-consensus": 64,
+          "single-note-rule": 58,
+          "arlstm-tiebreaker": 59
+        },
+        "results_full": {
+          "pianoplayer": {"hard": 0.381, "soft": 0.583},
+          "ArLSTM":      {"hard": 0.265, "soft": 0.410},
+          "ArGNN":       {"hard": 0.221, "soft": 0.399}
+        },
+        "results_neutral": {
+          "pianoplayer": {"hard": 0.566, "soft": 0.734},
+          "ArLSTM":      {"hard": 0.279, "soft": 0.406},
+          "ArGNN":       {"hard": 0.230, "soft": 0.402}
+        }
+      },
+      "lh": {
+        "n_buckets_total": 125,
+        "n_gt_entries_full": 124,
+        "n_gt_entries_neutral": 78,
+        "n_artifact_skipped": 1,
+        "decision_breakdown": {
+          "single-note-rule": 66,
+          "arlstm-tiebreaker": 46,
+          "predictor-consensus": 12
+        },
+        "results_full": {
+          "pianoplayer": {"hard": 0.137, "soft": 0.262},
+          "ArLSTM":      {"hard": 0.919, "soft": 0.923},
+          "ArGNN":       {"hard": 0.766, "soft": 0.883}
+        },
+        "results_neutral": {
+          "pianoplayer": {"hard": 0.218, "soft": 0.391},
+          "ArLSTM":      {"hard": 0.872, "soft": 0.878},
+          "ArGNN":       {"hard": 0.718, "soft": 0.859}
+        }
+      },
+      "key_finding": "pianoplayer wins on Bach RH scalar passages (Soft 0.734 vs ArLSTM 0.406) — direction REVERSES from Canon. Two contributing explanations: (1) Bach RH is exactly the scalar/thumb-under scenario Parncutt cost model was designed for, (2) rule-based GT's single-note-rule structurally aligns with pianoplayer cost model behavior on stepwise. Bach LH remains ArLSTM-dominant (0.878 vs 0.391), consistent with pp's universal LH ring atrophy bias. Logical implication: Logic Track is best-when-style-dependent; current default (ArLSTM) is correct for Canon-style and Summer-style but not Bach Invention-style."
+    }
   },
 
   "regression_pins": {
