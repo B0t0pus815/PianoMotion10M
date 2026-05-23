@@ -55,9 +55,10 @@
 
 ### 7.3.3 系統面
 
-1. **Hardware live mode 未驗證**：所有 demo 都採用 replay 模式（用 biomech v4 影片當 fake student）。真實 webcam + MIDI keyboard 整合是 Stage D 待完成項
+1. **Hardware live mode 未驗證**：所有 demo 都採用 replay 模式（用 biomech v4 影片當 fake student）。真實 webcam + MIDI keyboard 整合是 Stage D 部分待完成項
 2. **wrist height / curvature feedback v1 未實作**：comparator 只判「哪根指頭按下去」，不判「手腕是否抬太高、手指是否彎曲」。這是鋼琴教學的核心 feedback dimension 之一，目前缺失
 3. **UI 未經正式 user study**：第六章描述的設計基於 informal 內部測試，沒有量化資料支持「per-onset 視覺脈衝是否有助於指法錯誤識別」
+4. **OSMD 樂譜 cursor 同步是 beat 估算**：精確的 score↔video sync 需要 explicit tempo map 從 MIDI 提取並餵進 OSMD cursor advance 公式，目前只用簡化「2 步 / 秒」近似
 
 ## 7.4 未來工作
 

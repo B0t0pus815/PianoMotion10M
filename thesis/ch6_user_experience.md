@@ -67,9 +67,19 @@
 
 這個元件是本論文相對 Synthesia 類產品的關鍵差異：**錯誤不是匯總到 session 結束才看，而是即時定位到具體 5-10 秒片段並提供並排對比**。
 
-### 6.2.7 Sheet Music Card
+### 6.2.7 Sheet Music Card (OSMD-rendered)
 
-最底下的樂譜卡片目前是 placeholder—硬編碼兩小節 G clef 樂譜，與當前播放歌曲無關。這是 Stage D 待完成項，目標是 integrate OpenSheetMusicDisplay (OSMD) 從 MIDI 即時渲染對應樂譜並標註 ArLSTM 推薦指法。
+樂譜卡片透過 `OSMDScore` React 元件整合 [OpenSheetMusicDisplay (OSMD) v1.8.7](https://opensheetmusicdisplay.org/) 渲染 MusicXML。具體流程：
+
+1. **MIDI → MusicXML 預處理**：`midi_to_musicxml.py` 用 music21 把 MIDI 轉成 MusicXML，可選地透過 `--annotate-fingering` flag 把 ArLSTM 預測的指法以 `<fingering>` tag 嵌入每個 note element
+2. **OSMD 渲染**：載入 MusicXML，渲染為 SVG 顯示在 sheet music card 中。OSMD 配置為 compact mode，不顯示 title/composer/part-name (節省垂直空間)
+3. **指法視覺化**：MusicXML 中的 `<fingering>` tag 在 OSMD 渲染為音符上方的小數字 (1-5)，學生看樂譜就能看到 ArLSTM 建議的指法——這個 feature 把 Logic Track 從「judge only」延伸成「prescribe before play」
+4. **Cursor 同步**：`highlightTime` prop 傳入當前播放秒數，OSMD cursor 自動 advance 到對應位置（best-effort beat 估算）
+5. **Fallback**：當歌曲沒有 `scoreUrl` (e.g. Summer)，元件 fall back 到原本的 hardcoded `Staff` placeholder，不會 break UI
+
+**位置-索引對齊機制**：music21 重新 quantize MIDI 時會調整 note offset 到節拍格點，導致時間戳跟 ArLSTM 預測的秒數對不上。midi_to_musicxml.py 採用 position-indexed fallback——第 N 個 score note of pitch P 對 ArLSTM 第 N 個 (time, pitch=P) prediction——在 Canon RH 上達到 296/313 = 94.6% 覆蓋率，未覆蓋的 17 個 notes 是 music21 重 quantize 出現的時間切分差異，可在 future work 中用 explicit tempo mapping 改善。
+
+**Defense demo 路徑**：webui 啟動後，PracticeScreen 載入 Canon 即可看到 OSMD 渲染的樂譜帶 ArLSTM 指法 annotation。配合 hero video 與 PianoRoll 形成「眼睛在哪裡都能看到正確指法」的多視角學習介面。
 
 ### 6.2.8 Transport Controls
 
@@ -171,6 +181,6 @@ T+192s  曲子結束
 1. **資訊密度可能過高**——同時顯示 hero video / overlay / piano roll / accuracy ring 在低解析螢幕（例如 13 吋筆電）可能過密。Stage D 可加 layout density toggle
 2. **音樂 onset 密集區段 FeedbackOverlay 可能視覺疲勞**——例如 Canon 後半 16 分音符段，1 秒 4 個 onset = 4 個脈衝。Stage D 可考慮聚合（連續 N 個正確時降到「閒暇」狀態，只在錯誤時 surface）
 3. **指法數字標籤** (`R/middle` vs `R/3`) 對非鋼琴背景使用者哪個更直觀，需測試
-4. **Sheet Music 概念示意** 是 thesis demo 顯眼的「未完成」——是 Stage D 優先項
+4. ~~Sheet Music 概念示意~~ → 已替換為 OSMD 渲染（見 §6.2.7）。剩餘小幅 polish：cursor 同步機制目前是 beat 估算，精確 sync 需要 explicit tempo map
 
-Stage D 完成後，可考慮做 8-10 位學生的 think-aloud user study，量化 UI feedback 對指法錯誤識別率的影響——這會是後續工作的方向。
+Stage D OSMD 整合完成後，下一步可考慮做 8-10 位學生的 think-aloud user study，量化 UI feedback (特別是樂譜上的 ArLSTM fingering tag) 對指法錯誤識別率的影響——這會是後續工作的方向。

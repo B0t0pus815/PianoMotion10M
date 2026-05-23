@@ -7,6 +7,21 @@ The "Phase / Stage" labels match the architectural rollout in
 
 ---
 
+## 2026-05-24 — Stage D OSMD sheet music integration
+
+- ✓ `midi_to_musicxml.py` — MIDI → MusicXML via music21
+- ✓ `--annotate-fingering` flag — attach ArLSTM Fingering tags by
+  position-indexed alignment (94.6% Canon RH coverage)
+- ✓ `songs/{canon,canon_with_fingering,bach_invention_01}.musicxml`
+- ✓ OSMD v1.8.7 via jsDelivr CDN added to `webui/index.html`
+- ✓ `webui/src/OSMDScore.js` — React wrapper for OSMD
+- ✓ `PracticeScreen.js` Sheet Music card swaps placeholder Staff for
+  `<OSMDScore/>` when scoreUrl available; falls back to Staff otherwise
+- ✓ `songs.json` canon entry adds `scoreUrl` pointing at fingering-annotated XML
+- ✓ ch6 §6.2.7 rewritten to describe OSMD integration (was placeholder note)
+- ✓ ch6 §6.5 + ch7 §7.3.3 limitations updated to reflect what's now done
+  vs remaining (OSMD cursor sync precision)
+
 ## 2026-05-23 — Bach Invention cross-piece + 文件套件補完
 
 ### Bach Invention No.1 BWV 772 cross-piece audit
