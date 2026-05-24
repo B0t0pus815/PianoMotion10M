@@ -7,7 +7,17 @@ The "Phase / Stage" labels match the architectural rollout in
 
 ---
 
-## 2026-05-24 — Stage D OSMD sheet music integration
+## 2026-05-24 — Stage D OSMD sheet music + Wrist feedback v1
+
+### Wrist height feedback v1
+- ✓ `comparator.py` `HandHistory` 加 wrist_buf 雙手追蹤
+- ✓ `wrist_status()` 函式：rolling-median 4 秒視窗為 baseline，arched/collapsed/good/unknown 4 個狀態
+- ✓ `OnsetResult` 加 `wrist_status` + `wrist_deviation_px` 欄位
+- ✓ `runner.py` broadcaster.publish 加 wrist fields 推給 WS clients
+- ✓ `PracticeScreen.js` FeedbackOverlay 加 wrist warning badge（顯示「⚠ 手腕太高/太低」+ 偏離 px）
+- ✓ ch7 §7.3.3 limitation 更新成 "wrist v1 done, finger curvature 未做"
+
+### Stage D OSMD sheet music integration
 
 - ✓ `midi_to_musicxml.py` — MIDI → MusicXML via music21
 - ✓ `--annotate-fingering` flag — attach ArLSTM Fingering tags by

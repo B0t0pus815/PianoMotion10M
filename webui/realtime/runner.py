@@ -260,6 +260,9 @@ def main():
                         'detected_finger': r.detected_finger,
                         'correct': r.correct,
                         'confidence': round(r.confidence, 3),
+                        # Wrist feedback v1 (2026-05-24)
+                        'wrist_status': r.wrist_status,
+                        'wrist_deviation_px': round(r.wrist_deviation_px, 1),
                     })
                 if args.max_onsets and len(results) >= args.max_onsets:
                     raise StopIteration

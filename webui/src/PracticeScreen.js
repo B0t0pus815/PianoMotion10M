@@ -198,6 +198,26 @@ function FeedbackOverlay({ event, generation }) {
   else if (isWrong)  label = `${hand}${expNum} ≠ ${gotNum}`;
   else               label = `${hand}${expNum} · 未偵測`;
 
+  // Wrist feedback v1 (2026-05-24): show small badge below the main
+  // finger feedback when the wrist status is abnormal.
+  const wristBadge = (() => {
+    if (!event.wrist_status || event.wrist_status === 'good' ||
+        event.wrist_status === 'unknown') return null;
+    const isArched = event.wrist_status === 'arched';
+    const text = isArched ? '手腕太高' : '手腕太低';
+    const wColor = isArched ? HK.gold : HK.red;
+    return (
+      <div style={{
+        marginTop: 6, padding: '4px 12px', borderRadius: 8,
+        background: `${wColor}22`, border: `1px solid ${wColor}`,
+        color: HK.text, fontFamily: HK.fontMono, fontSize: 11,
+        letterSpacing: 0.5,
+      }}>
+        ⚠ {text} ({event.wrist_deviation_px > 0 ? '+' : ''}{event.wrist_deviation_px}px)
+      </div>
+    );
+  })();
+
   return (
     <div key={generation} style={{
       position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -212,17 +232,22 @@ function FeedbackOverlay({ event, generation }) {
         }}/>
       )}
       <div style={{
-        padding: '10px 22px',
-        borderRadius: 14,
-        background: `${color}26`,
-        border: `2px solid ${color}`,
-        color: HK.text,
-        fontFamily: HK.fontMono, fontSize: 22, fontWeight: 700,
-        letterSpacing: 1,
-        backdropFilter: 'blur(8px)',
-        boxShadow: `0 0 30px ${color}66`,
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
         animation: 'hkFbPop 1200ms ease-out forwards',
-      }}>{label}</div>
+      }}>
+        <div style={{
+          padding: '10px 22px',
+          borderRadius: 14,
+          background: `${color}26`,
+          border: `2px solid ${color}`,
+          color: HK.text,
+          fontFamily: HK.fontMono, fontSize: 22, fontWeight: 700,
+          letterSpacing: 1,
+          backdropFilter: 'blur(8px)',
+          boxShadow: `0 0 30px ${color}66`,
+        }}>{label}</div>
+        {wristBadge}
+      </div>
       <style>{`
         @keyframes hkFbFlash { from {opacity: 1} to {opacity: 0} }
         @keyframes hkFbPop {

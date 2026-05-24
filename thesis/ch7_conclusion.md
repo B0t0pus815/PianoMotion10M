@@ -56,7 +56,7 @@
 ### 7.3.3 系統面
 
 1. **Hardware live mode 未驗證**：所有 demo 都採用 replay 模式（用 biomech v4 影片當 fake student）。真實 webcam + MIDI keyboard 整合是 Stage D 部分待完成項
-2. **wrist height / curvature feedback v1 未實作**：comparator 只判「哪根指頭按下去」，不判「手腕是否抬太高、手指是否彎曲」。這是鋼琴教學的核心 feedback dimension 之一，目前缺失
+2. **Wrist height feedback v1 已實作（2026-05-24）**：comparator 加入 `wrist_status` 欄位 (`arched` / `collapsed` / `good` / `unknown`)，採用 student 自身 rolling-median 4 秒視窗作基準（避免跨 student 校準問題）；PracticeScreen FeedbackOverlay 在 wrist status 異常時顯示「⚠ 手腕太高/太低」+ 像素偏離量。finger curvature feedback（手指彎曲度）仍未實作——需要 3D landmark 而非單純 2D y 軸，這是 future work
 3. **UI 未經正式 user study**：第六章描述的設計基於 informal 內部測試，沒有量化資料支持「per-onset 視覺脈衝是否有助於指法錯誤識別」
 4. **OSMD 樂譜 cursor 同步是 beat 估算**：精確的 score↔video sync 需要 explicit tempo map 從 MIDI 提取並餵進 OSMD cursor advance 公式，目前只用簡化「2 步 / 秒」近似
 
