@@ -7,6 +7,22 @@ The "Phase / Stage" labels match the architectural rollout in
 
 ---
 
+## 2026-05-26 — Beethoven cross-piece + Universal Winner claim revised
+
+### Beethoven Op.2 No.1 mvt 1 audit
+- ✓ Downloaded Mutopia public-domain MIDI (1675 notes, 191s)
+- ✓ Generated RH n=464 / LH n=406 rule-based GT
+- ✓ Four-way audit, neutral subset:
+    - RH: pianoplayer Soft **0.662** vs ArLSTM 0.359 (pp wins, +0.303)
+    - LH: ArLSTM 0.379 vs pianoplayer 0.335 (ArLSTM barely wins +0.044)
+- ✓ Updated `eval_data/audit_results.json` with beethoven_op2no1_mvt1 block
+- ✓ ch4 §4.6.4 NEW: Beethoven results + §4.6.5 修正 thesis claim + §4.6.6 methodological caveats (HAND_SPLIT, artifact rate)
+- ✓ ch7 §7.1 RQ2 answer revised: "style + hand 雙重 dependent" with 4-row context table
+
+### Key thesis revision
+Previous claim (after Bach): "ArLSTM wins LH consistently across pieces"
+NEW claim (after Beethoven): "ArLSTM LH dominance is texture-dependent — works on regular Alberti/contrapuntal bass, breaks down on angular Classical sonata LH"
+
 ## 2026-05-24 — Stage D OSMD sheet music + Wrist feedback v1
 
 ### Wrist height feedback v1

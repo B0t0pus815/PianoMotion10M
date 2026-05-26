@@ -144,6 +144,49 @@
         }
       },
       "key_finding": "pianoplayer wins on Bach RH scalar passages (Soft 0.734 vs ArLSTM 0.406) — direction REVERSES from Canon. Two contributing explanations: (1) Bach RH is exactly the scalar/thumb-under scenario Parncutt cost model was designed for, (2) rule-based GT's single-note-rule structurally aligns with pianoplayer cost model behavior on stepwise. Bach LH remains ArLSTM-dominant (0.878 vs 0.391), consistent with pp's universal LH ring atrophy bias. Logical implication: Logic Track is best-when-style-dependent; current default (ArLSTM) is correct for Canon-style and Summer-style but not Bach Invention-style."
+    },
+    "beethoven_op2no1_mvt1": {
+      "song": "Beethoven Piano Sonata No.1 in F minor Op.2 No.1, mvt 1 (Allegro)",
+      "midi": "input_songs/Beethoven_Sonata_Op2No1_mvt1.mid",
+      "midi_source": "https://www.mutopiaproject.org/ftp/BeethovenLv/O2/LVB_Sonate_02no1_1/LVB_Sonate_02no1_1.mid",
+      "n_notes_total": 1675,
+      "rh": {
+        "n_buckets_total": 910,
+        "n_gt_entries_full": 464,
+        "n_gt_entries_neutral": 301,
+        "n_artifact_skipped": 446,
+        "decision_breakdown": {
+          "predictor-consensus": 138,
+          "single-note-rule": 154,
+          "arlstm-tiebreaker": 163,
+          "chord-rule(interval=8)": 2,
+          "chord-rule(interval=9)": 2,
+          "chord-rule(interval=10)": 1,
+          "chord-rule(interval=12)": 4
+        },
+        "results_neutral": {
+          "pianoplayer": {"hard": 0.555, "soft": 0.662},
+          "ArLSTM":      {"hard": 0.209, "soft": 0.359},
+          "ArGNN":       {"hard": 0.213, "soft": 0.368}
+        }
+      },
+      "lh": {
+        "n_buckets_total": 568,
+        "n_gt_entries_full": 406,
+        "n_gt_entries_neutral": 142,
+        "n_artifact_skipped": 162,
+        "decision_breakdown": {
+          "single-note-rule": 111,
+          "arlstm-tiebreaker": 264,
+          "predictor-consensus": 31
+        },
+        "results_neutral": {
+          "pianoplayer": {"hard": 0.317, "soft": 0.335},
+          "ArLSTM":      {"hard": 0.190, "soft": 0.379},
+          "ArGNN":       {"hard": 0.246, "soft": 0.347}
+        }
+      },
+      "key_finding": "Beethoven RH: pianoplayer wins (Soft 0.662 vs ArLSTM 0.359) — consistent with Bach RH pattern (pp wins scalar passages). Beethoven LH SURPRISES: ArLSTM only barely wins Soft (0.379 vs 0.335), and ArLSTM actually LOSES Hard (0.190 vs 0.317). Both models score poorly (< 0.4 Soft), unlike Canon/Bach LH where ArLSTM dominated. Likely contributing factors: (1) Beethoven LH is angular (chord stabs + scalar runs alternating), not the regular Alberti or contrapuntal texture ArLSTM saw in PIG training; (2) HAND_SPLIT=60 misassigns some notes during cross-hand passages typical of Classical sonatas; (3) high artifact-skip count (446 RH + 162 LH) suggests MIDI quality issues. Revised thesis claim: ArLSTM LH dominance is texture-dependent, not universal."
     }
   },
 

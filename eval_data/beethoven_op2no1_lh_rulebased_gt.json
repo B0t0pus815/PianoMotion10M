@@ -1,0 +1,4481 @@
+{
+  "song": "Canon in D (Pachelbel, EASY tutorial) — LEFT full (406 entries)",
+  "midi": "input_songs/Beethoven_Sonata_Op2No1_mvt1.mid",
+  "hand": "left",
+  "fingering_convention": "1=thumb, 2=index, 3=middle, 4=ring, 5=pinky",
+  "methodology": "Rule-based GT applying standard piano pedagogical conventions: interval-based chord fingering (m3→[1,3], M3/P4→[1,4], P5+→[1,5]), stepwise single-note continuity (finger ±1 for ±1/2 semitone moves), repeated-note same-finger. Predictor consensus used where rules don't cover; ArLSTM tiebreaker (Ramoneda 2022 SOTA) used otherwise. Each entry carries a \"decision\" field documenting which rule applied.",
+  "decision_summary": {
+    "arlstm-tiebreaker": 264,
+    "artifact-skip": 162,
+    "predictor-consensus": 31,
+    "single-note-rule": 111
+  },
+  "ground_truth": [
+    {
+      "onset_index": 10,
+      "onset_time": 4.421046,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 13,
+      "onset_time": 4.736835,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 16,
+      "onset_time": 5.052624,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 25,
+      "onset_time": 10.105248,
+      "midi_notes": [
+        43
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 26,
+      "onset_time": 10.421037,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 27,
+      "onset_time": 10.736825999999999,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 28,
+      "onset_time": 11.052615,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 29,
+      "onset_time": 12.2631395,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 32,
+      "onset_time": 16.736817,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 34,
+      "onset_time": 22.736808,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 36,
+      "onset_time": 23.052597,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 39,
+      "onset_time": 23.684175,
+      "midi_notes": [
+        50
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 42,
+      "onset_time": 24.315752999999997,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 43,
+      "onset_time": 24.631542,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 44,
+      "onset_time": 24.947331,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 45,
+      "onset_time": 25.26312,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 46,
+      "onset_time": 25.578909,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 47,
+      "onset_time": 25.894697999999998,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 48,
+      "onset_time": 26.210487,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 49,
+      "onset_time": 26.526276,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 51,
+      "onset_time": 27.157854,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 53,
+      "onset_time": 27.789431999999998,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 54,
+      "onset_time": 28.105221,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 55,
+      "onset_time": 28.42101,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 56,
+      "onset_time": 28.736798999999998,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 57,
+      "onset_time": 29.052588,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 59,
+      "onset_time": 29.684165999999998,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 61,
+      "onset_time": 30.315744,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 62,
+      "onset_time": 30.631532999999997,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 63,
+      "onset_time": 30.947322,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 64,
+      "onset_time": 32.526267,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 65,
+      "onset_time": 32.842056,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 66,
+      "onset_time": 33.157845,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 67,
+      "onset_time": 33.473634,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 68,
+      "onset_time": 33.789423,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 69,
+      "onset_time": 34.105212,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 70,
+      "onset_time": 34.421001,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 71,
+      "onset_time": 34.73679,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 72,
+      "onset_time": 35.052579,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 73,
+      "onset_time": 35.368368,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 74,
+      "onset_time": 35.684157,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 75,
+      "onset_time": 35.999946,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 76,
+      "onset_time": 36.315735,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 77,
+      "onset_time": 36.4736295,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 78,
+      "onset_time": 36.631524,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 79,
+      "onset_time": 36.7894185,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 80,
+      "onset_time": 36.947313,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 81,
+      "onset_time": 37.1052075,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 82,
+      "onset_time": 37.263101999999996,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 83,
+      "onset_time": 37.4209965,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 84,
+      "onset_time": 37.578891,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 85,
+      "onset_time": 37.736785499999996,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 86,
+      "onset_time": 37.89468,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 87,
+      "onset_time": 38.0525745,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 88,
+      "onset_time": 38.210468999999996,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 89,
+      "onset_time": 38.3683635,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 90,
+      "onset_time": 38.526258,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 91,
+      "onset_time": 38.684152499999996,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 92,
+      "onset_time": 38.842047,
+      "midi_notes": [
+        43
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 93,
+      "onset_time": 38.9999415,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 94,
+      "onset_time": 39.157835999999996,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 95,
+      "onset_time": 39.3157305,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 96,
+      "onset_time": 39.473625,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 97,
+      "onset_time": 39.631519499999996,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 98,
+      "onset_time": 39.789414,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 99,
+      "onset_time": 39.9473085,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 100,
+      "onset_time": 40.105202999999996,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 101,
+      "onset_time": 40.2630975,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 102,
+      "onset_time": 40.420992,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 103,
+      "onset_time": 40.578886499999996,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 104,
+      "onset_time": 40.736781,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 105,
+      "onset_time": 41.052569999999996,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 106,
+      "onset_time": 41.684148,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 107,
+      "onset_time": 41.999936999999996,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 108,
+      "onset_time": 42.315726,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 109,
+      "onset_time": 42.947303999999995,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 110,
+      "onset_time": 43.263093,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 111,
+      "onset_time": 43.578882,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 112,
+      "onset_time": 44.842037999999995,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 113,
+      "onset_time": 45.157827,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 114,
+      "onset_time": 45.473616,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 115,
+      "onset_time": 45.789404999999995,
+      "midi_notes": [
+        36
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 116,
+      "onset_time": 46.105194,
+      "midi_notes": [
+        39
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 117,
+      "onset_time": 46.736771999999995,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 118,
+      "onset_time": 47.052561,
+      "midi_notes": [
+        37
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 120,
+      "onset_time": 47.999928,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 121,
+      "onset_time": 48.315717,
+      "midi_notes": [
+        39
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 122,
+      "onset_time": 48.631505999999995,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 123,
+      "onset_time": 48.947295,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 124,
+      "onset_time": 49.105189499999994,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 126,
+      "onset_time": 49.4209785,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 128,
+      "onset_time": 49.7367675,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 130,
+      "onset_time": 50.052556499999994,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 132,
+      "onset_time": 50.52624,
+      "midi_notes": [
+        39
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 133,
+      "onset_time": 50.6841345,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 135,
+      "onset_time": 51.157818,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 152,
+      "onset_time": 62.526222,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 169,
+      "onset_time": 68.526213,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 170,
+      "onset_time": 68.842002,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 171,
+      "onset_time": 69.157791,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 172,
+      "onset_time": 69.47358,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 173,
+      "onset_time": 69.789369,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 174,
+      "onset_time": 70.105158,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 175,
+      "onset_time": 70.420947,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 176,
+      "onset_time": 70.736736,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 178,
+      "onset_time": 71.368314,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 180,
+      "onset_time": 71.999892,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 181,
+      "onset_time": 72.315681,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 182,
+      "onset_time": 72.63147,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 183,
+      "onset_time": 72.947259,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 184,
+      "onset_time": 73.263048,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 186,
+      "onset_time": 73.894626,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 188,
+      "onset_time": 74.52620399999999,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 189,
+      "onset_time": 74.841993,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 190,
+      "onset_time": 75.157782,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 191,
+      "onset_time": 77.36830499999999,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 192,
+      "onset_time": 77.684094,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 193,
+      "onset_time": 77.999883,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 194,
+      "onset_time": 78.31567199999999,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 195,
+      "onset_time": 78.631461,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 197,
+      "onset_time": 79.26303899999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 198,
+      "onset_time": 79.578828,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 199,
+      "onset_time": 79.894617,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 200,
+      "onset_time": 80.21040599999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 201,
+      "onset_time": 80.526195,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 202,
+      "onset_time": 80.841984,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 204,
+      "onset_time": 81.473562,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 206,
+      "onset_time": 82.10513999999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 207,
+      "onset_time": 82.420929,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 208,
+      "onset_time": 82.736718,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 209,
+      "onset_time": 83.05250699999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 210,
+      "onset_time": 83.368296,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 212,
+      "onset_time": 83.99987399999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 213,
+      "onset_time": 84.315663,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 214,
+      "onset_time": 84.631452,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 215,
+      "onset_time": 84.94724099999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 216,
+      "onset_time": 85.26303,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 217,
+      "onset_time": 85.578819,
+      "midi_notes": [
+        50
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 218,
+      "onset_time": 85.89460799999999,
+      "midi_notes": [
+        47
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 219,
+      "onset_time": 86.210397,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 220,
+      "onset_time": 86.6840805,
+      "midi_notes": [
+        43
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 221,
+      "onset_time": 86.84197499999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 222,
+      "onset_time": 87.157764,
+      "midi_notes": [
+        54
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 223,
+      "onset_time": 87.473553,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 224,
+      "onset_time": 87.78934199999999,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 225,
+      "onset_time": 88.105131,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 226,
+      "onset_time": 88.42092,
+      "midi_notes": [
+        45
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 227,
+      "onset_time": 88.73670899999999,
+      "midi_notes": [
+        42
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 228,
+      "onset_time": 89.2103925,
+      "midi_notes": [
+        41
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 229,
+      "onset_time": 89.368287,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 230,
+      "onset_time": 89.52618149999999,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 231,
+      "onset_time": 89.68407599999999,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 232,
+      "onset_time": 89.8419705,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 233,
+      "onset_time": 89.999865,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 234,
+      "onset_time": 90.1577595,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 235,
+      "onset_time": 90.315654,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 236,
+      "onset_time": 90.47354849999999,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 237,
+      "onset_time": 90.63144299999999,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 238,
+      "onset_time": 90.7893375,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 239,
+      "onset_time": 90.947232,
+      "midi_notes": [
+        43
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 240,
+      "onset_time": 91.1051265,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 241,
+      "onset_time": 91.263021,
+      "midi_notes": [
+        40
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 242,
+      "onset_time": 91.42091549999999,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 243,
+      "onset_time": 91.57880999999999,
+      "midi_notes": [
+        39
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 244,
+      "onset_time": 91.7367045,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 245,
+      "onset_time": 92.0524935,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 246,
+      "onset_time": 92.210388,
+      "midi_notes": [
+        51
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 247,
+      "onset_time": 92.36828249999999,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 248,
+      "onset_time": 92.6840715,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 249,
+      "onset_time": 92.841966,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 250,
+      "onset_time": 92.9998605,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 252,
+      "onset_time": 93.47354399999999,
+      "midi_notes": [
+        36
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 253,
+      "onset_time": 93.6314385,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 254,
+      "onset_time": 93.9472275,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 255,
+      "onset_time": 94.105122,
+      "midi_notes": [
+        37
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 256,
+      "onset_time": 94.26301649999999,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 257,
+      "onset_time": 94.5788055,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 258,
+      "onset_time": 94.7367,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 259,
+      "onset_time": 94.8945945,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 260,
+      "onset_time": 95.21038349999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 261,
+      "onset_time": 95.36827799999999,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 262,
+      "onset_time": 95.5261725,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 263,
+      "onset_time": 95.8419615,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 264,
+      "onset_time": 95.999856,
+      "midi_notes": [
+        34
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 265,
+      "onset_time": 96.15775049999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 266,
+      "onset_time": 96.4735395,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 267,
+      "onset_time": 96.631434,
+      "midi_notes": [
+        36
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 268,
+      "onset_time": 96.7893285,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 269,
+      "onset_time": 97.10511749999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 270,
+      "onset_time": 97.26301199999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 271,
+      "onset_time": 97.4209065,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 272,
+      "onset_time": 97.578801,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 273,
+      "onset_time": 97.7366955,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 274,
+      "onset_time": 97.89459,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 275,
+      "onset_time": 98.05248449999999,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 276,
+      "onset_time": 98.3682735,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 277,
+      "onset_time": 98.526168,
+      "midi_notes": [
+        32
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 278,
+      "onset_time": 98.6840625,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 279,
+      "onset_time": 98.99985149999999,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 280,
+      "onset_time": 99.15774599999999,
+      "midi_notes": [
+        34
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 281,
+      "onset_time": 99.3156405,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 282,
+      "onset_time": 99.6314295,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 283,
+      "onset_time": 99.789324,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 284,
+      "onset_time": 99.94721849999999,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 286,
+      "onset_time": 100.420902,
+      "midi_notes": [
+        35
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 287,
+      "onset_time": 100.5787965,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 289,
+      "onset_time": 100.89458549999999,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 292,
+      "onset_time": 101.368269,
+      "midi_notes": [
+        36
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 293,
+      "onset_time": 101.5261635,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 294,
+      "onset_time": 101.684058,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 296,
+      "onset_time": 101.999847,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 297,
+      "onset_time": 102.1577415,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 298,
+      "onset_time": 102.315636,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 299,
+      "onset_time": 102.4735305,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 300,
+      "onset_time": 102.631425,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 301,
+      "onset_time": 102.78931949999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 302,
+      "onset_time": 102.947214,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 303,
+      "onset_time": 103.1051085,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 304,
+      "onset_time": 103.263003,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 305,
+      "onset_time": 103.4208975,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 306,
+      "onset_time": 103.57879199999999,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 307,
+      "onset_time": 103.73668649999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 308,
+      "onset_time": 103.894581,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 309,
+      "onset_time": 104.0524755,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 310,
+      "onset_time": 104.21037,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 311,
+      "onset_time": 104.3682645,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 312,
+      "onset_time": 104.52615899999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 313,
+      "onset_time": 104.68405349999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 314,
+      "onset_time": 104.841948,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 315,
+      "onset_time": 104.9998425,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 316,
+      "onset_time": 105.157737,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 317,
+      "onset_time": 105.3156315,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 318,
+      "onset_time": 105.63142049999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 319,
+      "onset_time": 105.789315,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 320,
+      "onset_time": 105.9472095,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 321,
+      "onset_time": 106.2629985,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 322,
+      "onset_time": 106.57878749999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 323,
+      "onset_time": 106.736682,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 324,
+      "onset_time": 106.8945765,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 325,
+      "onset_time": 107.052471,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 326,
+      "onset_time": 107.2103655,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 327,
+      "onset_time": 107.36825999999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 328,
+      "onset_time": 107.52615449999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 330,
+      "onset_time": 107.8419435,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 331,
+      "onset_time": 107.999838,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 332,
+      "onset_time": 108.1577325,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 333,
+      "onset_time": 108.31562699999999,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 334,
+      "onset_time": 108.47352149999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 335,
+      "onset_time": 108.631416,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 336,
+      "onset_time": 108.7893105,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 337,
+      "onset_time": 108.947205,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 338,
+      "onset_time": 109.1050995,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 339,
+      "onset_time": 109.26299399999999,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 340,
+      "onset_time": 109.42088849999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 341,
+      "onset_time": 109.578783,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 342,
+      "onset_time": 109.7366775,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 343,
+      "onset_time": 109.894572,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 344,
+      "onset_time": 110.0524665,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 345,
+      "onset_time": 110.21036099999999,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 346,
+      "onset_time": 110.36825549999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 347,
+      "onset_time": 110.6840445,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 348,
+      "onset_time": 110.841939,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 349,
+      "onset_time": 110.9998335,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 350,
+      "onset_time": 111.31562249999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 351,
+      "onset_time": 111.6314115,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 352,
+      "onset_time": 111.9472005,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 353,
+      "onset_time": 112.10509499999999,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 354,
+      "onset_time": 112.26298949999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 355,
+      "onset_time": 112.420884,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 356,
+      "onset_time": 112.5787785,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 357,
+      "onset_time": 112.736673,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 358,
+      "onset_time": 112.8945675,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 359,
+      "onset_time": 113.21035649999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 361,
+      "onset_time": 113.5261455,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 362,
+      "onset_time": 113.8419345,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 363,
+      "onset_time": 114.15772349999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 364,
+      "onset_time": 114.4735125,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 365,
+      "onset_time": 114.631407,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 366,
+      "onset_time": 114.7893015,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 367,
+      "onset_time": 114.94719599999999,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 368,
+      "onset_time": 115.10509049999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 369,
+      "onset_time": 115.262985,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 370,
+      "onset_time": 115.4208795,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 371,
+      "onset_time": 115.7366685,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 372,
+      "onset_time": 115.89456299999999,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 373,
+      "onset_time": 116.05245749999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 374,
+      "onset_time": 116.3682465,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 381,
+      "onset_time": 122.210343,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 399,
+      "onset_time": 128.841912,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 402,
+      "onset_time": 129.157701,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 405,
+      "onset_time": 130.736646,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 408,
+      "onset_time": 131.052435,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 410,
+      "onset_time": 131.368224,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 414,
+      "onset_time": 134.841903,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 416,
+      "onset_time": 136.736637,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 417,
+      "onset_time": 137.052426,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 418,
+      "onset_time": 149.36819699999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 419,
+      "onset_time": 149.683986,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 420,
+      "onset_time": 149.999775,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 421,
+      "onset_time": 150.315564,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 423,
+      "onset_time": 150.94714199999999,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 424,
+      "onset_time": 151.26293099999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 425,
+      "onset_time": 151.57872,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 427,
+      "onset_time": 151.894509,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 428,
+      "onset_time": 152.210298,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 430,
+      "onset_time": 152.526087,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 431,
+      "onset_time": 152.84187599999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 432,
+      "onset_time": 153.15766499999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 434,
+      "onset_time": 153.789243,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 435,
+      "onset_time": 154.105032,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 437,
+      "onset_time": 154.420821,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 438,
+      "onset_time": 154.73660999999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 440,
+      "onset_time": 155.05239899999998,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 441,
+      "onset_time": 155.368188,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 442,
+      "onset_time": 155.683977,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 443,
+      "onset_time": 155.999766,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 444,
+      "onset_time": 156.315555,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 445,
+      "onset_time": 156.63134399999998,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 446,
+      "onset_time": 156.94713299999998,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 447,
+      "onset_time": 157.578711,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 448,
+      "onset_time": 157.8945,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 449,
+      "onset_time": 158.210289,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 450,
+      "onset_time": 158.52607799999998,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 451,
+      "onset_time": 158.84186699999998,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 452,
+      "onset_time": 158.9997615,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 453,
+      "onset_time": 159.157656,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 454,
+      "onset_time": 159.3155505,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 455,
+      "onset_time": 159.473445,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 456,
+      "onset_time": 159.789234,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 457,
+      "onset_time": 160.105023,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 458,
+      "onset_time": 160.2629175,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 459,
+      "onset_time": 160.42081199999998,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 460,
+      "onset_time": 160.57870649999998,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 461,
+      "onset_time": 160.73660099999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 462,
+      "onset_time": 161.05239,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 463,
+      "onset_time": 161.368179,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 464,
+      "onset_time": 161.5260735,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 465,
+      "onset_time": 161.683968,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 466,
+      "onset_time": 161.8418625,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 467,
+      "onset_time": 161.999757,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 468,
+      "onset_time": 162.1576515,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 470,
+      "onset_time": 162.47344049999998,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 471,
+      "onset_time": 162.631335,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 472,
+      "onset_time": 162.7892295,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 473,
+      "onset_time": 162.947124,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 474,
+      "onset_time": 163.1050185,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 475,
+      "onset_time": 163.262913,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 476,
+      "onset_time": 163.4208075,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 477,
+      "onset_time": 163.578702,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 478,
+      "onset_time": 163.7365965,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 479,
+      "onset_time": 163.894491,
+      "midi_notes": [
+        40
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 480,
+      "onset_time": 164.05238549999999,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 481,
+      "onset_time": 164.21027999999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 482,
+      "onset_time": 164.36817449999998,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 483,
+      "onset_time": 164.526069,
+      "midi_notes": [
+        41
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 484,
+      "onset_time": 164.6839635,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 485,
+      "onset_time": 164.841858,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 486,
+      "onset_time": 164.9997525,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 488,
+      "onset_time": 165.3155415,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 489,
+      "onset_time": 165.473436,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 490,
+      "onset_time": 165.6313305,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 491,
+      "onset_time": 165.789225,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 492,
+      "onset_time": 166.10501399999998,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 493,
+      "onset_time": 166.736592,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 494,
+      "onset_time": 167.052381,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 495,
+      "onset_time": 167.36817,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 496,
+      "onset_time": 167.99974799999998,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 497,
+      "onset_time": 168.315537,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 498,
+      "onset_time": 168.631326,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 499,
+      "onset_time": 168.947115,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 501,
+      "onset_time": 169.262904,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 503,
+      "onset_time": 169.578693,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 504,
+      "onset_time": 169.89448199999998,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 506,
+      "onset_time": 170.210271,
+      "midi_notes": [
+        52
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 507,
+      "onset_time": 170.52606,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 508,
+      "onset_time": 170.841849,
+      "midi_notes": [
+        44
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 509,
+      "onset_time": 171.157638,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 510,
+      "onset_time": 171.78921599999998,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 511,
+      "onset_time": 172.105005,
+      "midi_notes": [
+        46
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 512,
+      "onset_time": 172.420794,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 513,
+      "onset_time": 173.052372,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 514,
+      "onset_time": 173.368161,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 515,
+      "onset_time": 173.68394999999998,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 516,
+      "onset_time": 173.999739,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 518,
+      "onset_time": 174.315528,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        3
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 519,
+      "onset_time": 174.631317,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 520,
+      "onset_time": 174.947106,
+      "midi_notes": [
+        36
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 521,
+      "onset_time": 175.262895,
+      "midi_notes": [
+        36
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 522,
+      "onset_time": 175.42078949999998,
+      "midi_notes": [
+        58
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 524,
+      "onset_time": 175.57868399999998,
+      "midi_notes": [
+        36
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 525,
+      "onset_time": 175.73657849999998,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 527,
+      "onset_time": 175.894473,
+      "midi_notes": [
+        41
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 528,
+      "onset_time": 176.210262,
+      "midi_notes": [
+        53
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 530,
+      "onset_time": 176.84184,
+      "midi_notes": [
+        59
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 533,
+      "onset_time": 177.47341799999998,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 535,
+      "onset_time": 178.104996,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 537,
+      "onset_time": 178.736574,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 543,
+      "onset_time": 179.99973,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 545,
+      "onset_time": 180.631308,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        1
+      ],
+      "decision": "predictor-consensus"
+    },
+    {
+      "onset_index": 547,
+      "onset_time": 181.26288599999998,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 549,
+      "onset_time": 183.473409,
+      "midi_notes": [
+        57
+      ],
+      "fingering": [
+        5
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 553,
+      "onset_time": 187.262877,
+      "midi_notes": [
+        56
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 558,
+      "onset_time": 189.4734,
+      "midi_notes": [
+        49
+      ],
+      "fingering": [
+        2
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 561,
+      "onset_time": 189.789189,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    },
+    {
+      "onset_index": 564,
+      "onset_time": 190.42076699999998,
+      "midi_notes": [
+        55
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "single-note-rule"
+    },
+    {
+      "onset_index": 567,
+      "onset_time": 191.052345,
+      "midi_notes": [
+        48
+      ],
+      "fingering": [
+        4
+      ],
+      "decision": "arlstm-tiebreaker"
+    }
+  ]
+}

@@ -201,13 +201,56 @@ Bach RH 上 **pianoplayer 大幅勝過 ArLSTM** — 與 Canon 結果方向相反
 
 LH 上 ArLSTM 仍領先 (0.878 vs 0.391)，這個方向跟 Canon 結果一致——pianoplayer 的 LH ring atrophy bias 在 Bach 同樣顯現。
 
-### 4.6.4 對 thesis 主張的修正
+### 4.6.4 第三首 cross-piece：Beethoven Sonata Op.2 No.1 mvt 1
 
-Bach audit 揭示 ArLSTM **不是 universal winner**。修正後的 thesis claim：
+為進一步檢驗 cross-style 結論，將 audit pipeline 套用至 Beethoven Piano Sonata No.1 in F minor, Op.2 No.1 第一樂章 (1675 notes, 191 秒, Mutopia 公版)。古典 sonata 結構與 Canon 的 Baroque homophonic、Bach 的 contrapuntal 都不同。
 
-> 「ArLSTM 在 Canon RH+LH (chordal/homophonic) 與 Bach LH (scalar bass line) 上勝過 pianoplayer，平均 Soft 0.792 vs 0.578；但在 Bach RH (連續 scalar passage) 上 pianoplayer 反而勝出 (0.734 vs 0.406)。這暗示 Logic Track 的最優選擇可能 piece-style-dependent，是後續工作的 motivation。」
+**Beethoven RH (n=301 neutral)**：
 
-這個修正不削弱本論文的整合貢獻——Stage A→B→C 架構**本來就支持** runtime switch fingering source (`--fingering arlstm` 或 `--fingering pianoplayer` 都是合法的 default)。Bach 結果正好說明這個彈性設計的價值。
+| Track | Hard | Soft |
+|---|---|---|
+| **pianoplayer** | **0.555** | **0.662** |
+| ArGNN | 0.213 | 0.368 |
+| ArLSTM | 0.209 | 0.359 |
+
+**Beethoven LH (n=142 neutral)**：
+
+| Track | Hard | Soft |
+|---|---|---|
+| **ArLSTM** | 0.190 | **0.379** |
+| ArGNN | 0.246 | 0.347 |
+| pianoplayer | **0.317** | 0.335 |
+
+兩個 finding：
+
+**(1) RH scalar 反轉一致**：Beethoven RH 與 Bach RH 一樣呈現 pianoplayer 大幅勝出 (Soft 0.662 vs 0.359)。這跨兩首 scalar-dominant RH 一致，強化「pianoplayer cost model 在 scalar 段落有結構性優勢」的結論。
+
+**(2) LH 結果意外複雜**：與 Canon LH (ArLSTM 差距 +0.700)、Bach LH (+0.487) 對比，Beethoven LH ArLSTM 只贏 +0.044 Soft，且 Hard 反而 pianoplayer 較高 (0.317 vs 0.190)。**兩者 Soft 都 < 0.4，遠低於 Canon/Bach LH**。這修正了「ArLSTM LH 是 universal winner」的早期結論——其優勢具 texture-dependence，在 angular（chord-stab + 突發 scalar 交替）的 Classical sonata LH 上**消失**。
+
+### 4.6.5 對 thesis 主張的修正（含 Beethoven）
+
+修正後的 corpus-level claim（基於 Canon + Bach + Beethoven 三首）：
+
+| 情境 | ArLSTM vs pianoplayer | 跨曲一致性 |
+|---|---|---|
+| Homophonic / chord-with-melody (Canon RH+LH) | ArLSTM 大勝 (+0.214) | 單一觀察 |
+| Scalar-dominant RH (Bach, Beethoven) | pianoplayer 大勝 (+0.328 / +0.303) | **2/2 一致** |
+| Contrapuntal LH bass (Bach) | ArLSTM 大勝 (+0.487) | 單一觀察 |
+| Angular Classical sonata LH (Beethoven) | ArLSTM 微贏 (+0.044) | 單一觀察 |
+
+**新結論**：Logic Track 的最佳選擇是 **style + hand 雙重 dependent**——
+- ArLSTM 為 default（適配大部分 chordal、homophonic 場景與規律 LH）
+- pianoplayer 對 scalar-dominant 段落更適合（兩首已證實）
+- LH dominance 假設僅在規律 texture 下成立
+
+這個複雜化**不削弱**本論文的整合貢獻——Stage A→B→C 架構**本來就支持** runtime switch (`--fingering-source arlstm` 或 `pianoplayer`)，Beethoven 結果反而**強化**「彈性 design 是正確 architectural decision」的論述，並 motivate style-aware 自動切換為**直接 paper-grade future work**。
+
+### 4.6.6 Methodological Caveats（為 reviewer 主動準備）
+
+對 Beethoven 結果需揭露兩個 caveat：
+
+1. **HAND_SPLIT=60 在 Classical sonata 跨手段落不精確**：Beethoven Op.2 No.1 有典型 cross-hand passages（RH 越過中央 C 到低音域、LH 高至中音域）。系統的固定 pitch 切分會誤分配這些 note 給錯誤手，影響 corpus 統計。Canon 跟 Bach Invention 較少跨手所以這個 bug 不明顯。後續工作可改用 MIDI channel/track 訊息做 hand assignment
+2. **MIDI artifact 比率高**：Beethoven RH 910 buckets 中 446 被 artifact-skip（48%），暗示 Mutopia MIDI 在這首上的 quantization 與 sustain 處理產生大量重複 pitch onset。Canon/Bach 的 artifact 比率分別約 14% 跟 30%，Beethoven 達 48% 確實異常。可能影響「Beethoven LH ArLSTM 為何不如預期」的解讀
 
 ## 4.7 失敗模式案例分析
 

@@ -10,18 +10,18 @@
 
 **RQ2（選擇問題）**：在多個候選指法決策來源中，哪一個最適合擔任 Logic Track？
 
-**答**：**Style-dependent**。Canon RH+LH (n=183 neutral subset) 與 Bach LH (n=78 neutral) 上 ArLSTM 大幅勝過所有 baseline：
+**答**：**Style + hand 雙重 dependent**。基於 3 首 cross-piece corpus audit（Canon, Bach Invention, Beethoven Op.2 No.1）：
 
-| Track | Canon RH+LH Soft | Bach LH Soft |
+| 情境 | 最佳 candidate | 證據 |
 |---|---|---|
-| **ArLSTM** | **0.792** | **0.878** |
-| ArGNN | 0.654 | 0.859 |
-| pianoplayer | 0.578 | 0.391 |
-| motion_v4 | 0.358 | (no fingertips) |
+| Homophonic + chord-with-melody | **ArLSTM** | Canon RH+LH neutral (n=183) Soft 0.792 vs pp 0.578 |
+| Scalar-dominant RH | **pianoplayer** | Bach RH 0.734 vs ArLSTM 0.406; Beethoven RH 0.662 vs 0.359（2/2 一致） |
+| 規律 bass line (Alberti / 對位) | **ArLSTM** | Canon LH 0.975 vs pp 0.275; Bach LH 0.878 vs pp 0.391 |
+| Angular Classical sonata LH | **不確定** | Beethoven LH ArLSTM 0.379 vs pp 0.335（差 0.044）— 兩者皆差 |
 
-但 Bach RH (n=122 neutral) 上 **pianoplayer 反超** (Soft 0.734 vs ArLSTM 0.406)，因為 Bach RH 連續 16 分音符 scalar 段落正好是 Parncutt cost model 設計時的核心場景。
+**結論**：將 ArLSTM 設為 default（適配 chordal/homophonic 段落與規律 bass line），保留 pianoplayer 為 `--fingering-source pianoplayer` 可選方案（適配 scalar-dominant 段落如 Bach inventions、Czerny 練習曲、Beethoven sonata RH）。Logic Track **本來就是** runtime-switchable，這個彈性設計剛好涵蓋 cross-style 需求；Beethoven LH 的歧義性結果**直接 motivate** style-aware 自動切換為下一步工作（見 §7.4.1）。
 
-**結論**：將 ArLSTM 設為 default（適配大多數教學曲目的 chordal/homophonic 段落 + 所有 bass line），但保留 pianoplayer 作為 `--fingering-source pianoplayer` 可選方案（適配 scalar-dominant 段落如 Bach inventions、Czerny 練習曲）。Logic Track **本來就是** runtime-switchable 的，這個彈性設計剛好涵蓋 cross-style 需求。LH 上 pianoplayer 的 Soft 在兩首曲子都 < 0.4，呈現 systematic-failure 樣態（不是「弱於 ArLSTM」，而是「接近 random」）——為 cost-model 對 LH ring finger 的結構性 atrophy 提供跨樂曲一致證據。
+pianoplayer LH 在規律 texture (Canon, Bach) 上呈現 systematic-failure 樣態（Soft < 0.4），為 cost-model 對 LH ring finger 的結構性 atrophy 提供**跨樂曲一致證據**——但這個一致性僅限規律 texture，Beethoven 的 angular LH 上 pp 反而 Hard Accuracy 較高。
 
 **RQ3（教學閉環問題）**：能否把上述系統做成學生可以實際使用的工具？
 
