@@ -295,12 +295,68 @@ def label_by_nearest_fingertip(raw_per_frame, fingertips_data, frame_width, key_
     return per_frame
 
 
+def label_from_logic_track(raw_per_frame, midi_path, source='arlstm',
+                           use_override=True, fps=FPS):
+    """Label each lit key with the finger the Logic Track RECOMMENDS, taken
+    straight from the deterministic ArLSTM/pianoplayer engine — NOT from where the
+    rendered hand happens to be.
+
+    This is the accurate fingering reference: the number on the key IS the
+    recommendation (100% faithful), decoupled from the render's hand-pose fidelity.
+    Use this when the keyboard overlay is the teaching reference; use
+    label_by_nearest_fingertip only when the label must track the rendered hand.
+
+    Output shape matches label_by_nearest_fingertip:
+    per-frame dict[pitch -> (hand, label, alpha, is_ghost)].
+    """
+    try:
+        from webui.realtime.fingering_engine import generate_fingering
+    except Exception as exc:  # noqa: BLE001 — surface a clear cause, don't half-run
+        raise RuntimeError(
+            f'Logic Track unavailable for label_source={source!r}: {exc}'
+        ) from exc
+
+    onsets = generate_fingering(midi_path, source=source, use_override=use_override)
+    # pitch -> sorted [(onset_frame, finger_name, hand)]
+    by_pitch = {}
+    for e in onsets:
+        of = int(round(e.time * fps))
+        by_pitch.setdefault(e.pitch, []).append(
+            (of, e.expected_finger, e.expected_hand))
+    for p in by_pitch:
+        by_pitch[p].sort()
+
+    def recommend(frame, pitch):
+        cands = by_pitch.get(pitch)
+        if not cands:
+            return None
+        # most recent strike at/just before this frame (handles re-strikes); else nearest
+        le = [c for c in cands if c[0] <= frame + 2]
+        return le[-1] if le else min(cands, key=lambda c: abs(c[0] - frame))
+
+    per_frame = []
+    for i, pm in enumerate(raw_per_frame):
+        labels = {}
+        for pitch, (hand, alpha) in pm.items():
+            rec = recommend(i, pitch)
+            if rec is None:
+                labels[pitch] = (hand, None, alpha, True)   # no recommendation → ghost
+                continue
+            _, finger_name, lt_hand = rec
+            use_hand = lt_hand or hand
+            prefix = '' if use_hand == 'right' else 'L'
+            labels[pitch] = (use_hand, prefix + FINGER_NUM[finger_name], alpha, False)
+        per_frame.append(labels)
+    return per_frame
+
+
 def extract_active_notes_per_frame(midi_path: str, total_frames: int,
                                    fingertips_path: str = None,
                                    frame_width: int = 1920,
                                    key_width: float = None,
                                    t_full: float = T_FULL_DEFAULT,
-                                   tau: float = TAU_DEFAULT) -> list:
+                                   tau: float = TAU_DEFAULT,
+                                   label_source: str = 'auto') -> list:
     """取得每帧正在弹奏的音符, 并贴上手指 label + alpha.
 
     每个 note 的视觉生命周期 (相對於 onset):
@@ -344,7 +400,12 @@ def extract_active_notes_per_frame(midi_path: str, total_frames: int,
                 break  # alpha 单调递减, 后续帧也不会过关
             raw[f][note.pitch] = (hand, alpha)
 
-    if fingertips_path and os.path.exists(fingertips_path):
+    if label_source in ('arlstm', 'pianoplayer'):
+        # Option A: label keys with the Logic Track's RECOMMENDED finger — 100%
+        # accurate, decoupled from the rendered hand's pose fidelity.
+        print(f'      用 Logic Track ({label_source}) 定 label: 准确的推荐指法, 与渲染手位脱钩')
+        per_frame = label_from_logic_track(raw, midi_path, source=label_source)
+    elif fingertips_path and os.path.exists(fingertips_path):
         print(f'      用指尖数据定 label: {fingertips_path}')
         import json
         with open(fingertips_path) as f:
@@ -460,6 +521,11 @@ def main():
                         help=f'每个白键的像素宽度（默认 {DEFAULT_KEY_WIDTH}，与 IK 物理投影对齐；填满全屏用 None）')
     parser.add_argument('--fingertips', type=str, default=None,
                         help='指尖投影 JSON (simple_natural.py 输出的 *_fingertips.json)')
+    parser.add_argument('--label-source', type=str, default='auto',
+                        choices=['auto', 'arlstm', 'pianoplayer'],
+                        help='键上手指号的来源。auto=有指尖用最近手指否则音高(旧行为); '
+                             'arlstm/pianoplayer=直接用 Logic Track 推荐指法, 100%% 准确, '
+                             '与渲染手位脱钩 (教学参考用这个).')
     parser.add_argument('--decay_t_full', type=float, default=T_FULL_DEFAULT,
                         help=f'指數衰減: 前 N 秒保持全亮 (默認 {T_FULL_DEFAULT}s).')
     parser.add_argument('--decay_tau', type=float, default=TAU_DEFAULT,
@@ -484,6 +550,7 @@ def main():
         key_width=kw,
         t_full=args.decay_t_full,
         tau=args.decay_tau,
+        label_source=args.label_source,
     )
 
     process_frames(args.frames_dir, active_notes, args.out_dir,
