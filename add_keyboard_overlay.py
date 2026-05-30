@@ -56,6 +56,9 @@ FINGER_ORDER = ['thumb', 'index', 'middle', 'ring', 'pinky']
 
 # 键盘显示参数
 KEYBOARD_HEIGHT = 200     # 键盘区域高度（像素）
+DEFAULT_KEY_WIDTH = 51.87  # 白键像素宽度, 与 IK 物理投影对齐 (指尖 JSON 即按此几何投影).
+                           # 单一真值源: 渲染 (main --key_width) 与落键评估必须共用此值,
+                           # 否则键中心几何漂移会被误读成「手系统性外移」(见 eval_template_landing).
 WHITE_KEY_COLOR  = (240, 240, 240)
 BLACK_KEY_COLOR  = (30, 30, 30)
 HIGHLIGHT_RIGHT  = (100, 200, 255)  # 右手按键颜色（蓝）
@@ -453,8 +456,8 @@ def main():
                         help='键盘高度（像素，默认 200）')
     parser.add_argument('--keyboard_scale', type=float, default=1.0,
                         help='键盘横向缩放比例，< 1 让琴键变窄（默认 1.0）')
-    parser.add_argument('--key_width', type=float, default=51.87,
-                        help='每个白键的像素宽度（默认 51.87，与 IK 物理投影对齐；填满全屏用 None）')
+    parser.add_argument('--key_width', type=float, default=DEFAULT_KEY_WIDTH,
+                        help=f'每个白键的像素宽度（默认 {DEFAULT_KEY_WIDTH}，与 IK 物理投影对齐；填满全屏用 None）')
     parser.add_argument('--fingertips', type=str, default=None,
                         help='指尖投影 JSON (simple_natural.py 输出的 *_fingertips.json)')
     parser.add_argument('--decay_t_full', type=float, default=T_FULL_DEFAULT,
