@@ -678,6 +678,11 @@ def main():
     parser.add_argument('--midi', type=str, default=None, help='直接用 MIDI 文件 (比 MP3 提取更准)')
     parser.add_argument('--out_dir', type=str, default='./results/ik_output')
     parser.add_argument('--out_video', type=str, default='./results/ik_output_kb.mp4')
+    parser.add_argument('--label-source', type=str, default='arlstm',
+                        choices=['auto', 'arlstm', 'pianoplayer'],
+                        help='键盘 overlay 手指号来源, 转发给 add_keyboard_overlay. '
+                             'arlstm(默认)=Logic Track 推荐指法, 100%% 准, 与渲染手位脱钩 '
+                             '(教学参考); auto=旧的最近手指法(与渲染手一致但只 ~53%% 准).')
     parser.add_argument('--fingering',
                         choices=['dp', 'nearest', 'biomech', 'arlstm'], default='dp',
                         help='dp      = Viterbi minimizing wrist movement (default). '
@@ -955,6 +960,7 @@ def main():
               f'--mp3 "{args.mp3}" '
               f'--midi "{clean_midi_path}" '
               f'--fingertips "{fingertips_path}" '
+              f'--label-source {args.label_source} '
               f'--out_dir {kb_dir} '
               f'--out_video {args.out_video}')
     
