@@ -1,0 +1,19 @@
+[Unit]
+# HandKeys AI — UI + pre-rendered video server (phone/tablet connects here).
+# Edit User= and WorkingDirectory= for your Jetson, then:
+#   sudo cp deploy/handkeys-serve.service /etc/systemd/system/
+#   sudo systemctl enable --now handkeys-serve
+Description=HandKeys AI web UI server (serve.py :8765)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jetson
+WorkingDirectory=/home/jetson/PianoMotion10M
+ExecStart=/usr/bin/env python3 webui/serve.py 8765
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

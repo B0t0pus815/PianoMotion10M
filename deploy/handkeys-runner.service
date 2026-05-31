@@ -1,0 +1,31 @@
+[Unit]
+# HandKeys AI — live webcam/MIDI judge (headless, broadcasts feedback on :8766).
+# EDIT the placeholders below, then:
+#   sudo cp deploy/handkeys-runner.service /etc/systemd/system/
+#   sudo systemctl enable --now handkeys-runner
+#
+# Placeholders to replace:
+#   __MIDI_PORT__  e-piano MIDI port name, from:
+#                  python3 -c "import rtmidi; print(rtmidi.MidiIn().get_ports())"
+#   __SONG__       song basename used for --ref-midi and --reference
+Description=HandKeys AI realtime judge (runner.py :8766)
+After=network-online.target handkeys-serve.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jetson
+WorkingDirectory=/home/jetson/PianoMotion10M
+SupplementaryGroups=video audio
+ExecStart=/usr/bin/env python3 -m webui.realtime.runner \
+    --video 0 \
+    --midi "__MIDI_PORT__" \
+    --ref-midi "input_songs/__SONG__.mid" \
+    --reference "results/__SONG___arlstm_fingertips.json" \
+    --fingering-source pianoplayer \
+    --no-preview --ws-port 8766 --mirror
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

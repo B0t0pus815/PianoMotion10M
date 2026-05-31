@@ -8,8 +8,15 @@
 // and --fast replay mode (events flood in upfront and play back in sync with
 // the video).
 
-// Phase B WebSocket endpoint
-const HK_WS_URL = (typeof window !== 'undefined' && window.HK_WS_URL) || 'ws://localhost:8766';
+// Phase B WebSocket endpoint.
+// Default to the SAME host that served this page (so a phone/tablet loading the UI
+// from the Jetson NX's IP connects its WebSocket back to the NX, not to itself).
+// `window.HK_WS_URL` still overrides for custom setups.
+const HK_WS_URL =
+  (typeof window !== 'undefined' && window.HK_WS_URL) ||
+  (typeof window !== 'undefined' && window.location && window.location.hostname
+    ? `ws://${window.location.hostname}:8766`
+    : 'ws://localhost:8766');
 const FINGER_NUM = { thumb: 1, index: 2, middle: 3, ring: 4, pinky: 5 };
 
 // ─── WebSocket feedback stream hook ──────────────────────────────

@@ -1,0 +1,17 @@
+# HandKeys AI — Jetson NX runtime deps (LIVE JUDGING + SERVE only).
+# Deliberately NO torch / no CUDA python pkgs: the biomech videos are pre-rendered
+# offline on the dev machine; the NX only serves them + runs MediaPipe judging with
+# the pianoplayer (Parncutt DP) fingering source, which never imports torch.
+#
+# ⚠ Jetson/ARM caveats (verify on your JetPack version):
+#   - mediapipe: stock PyPI wheel is x86; on aarch64 use NVIDIA's prebuilt wheel
+#     (developer.nvidia.com / forum) or build from source. Dev machine pins 0.10.14.
+#   - opencv: prefer the JetPack system OpenCV (apt) over pip to get GPU/v4l2.
+
+numpy
+pretty_midi
+python-rtmidi          # USB-MIDI from the e-piano
+websockets             # runner -> UI feedback bridge
+pianoplayer            # torch-free fingering (Parncutt DP)
+mediapipe==0.10.14     # ⚠ ARM: may need NVIDIA aarch64 wheel instead
+opencv-python          # ⚠ ARM: prefer apt `python3-opencv` / JetPack build
