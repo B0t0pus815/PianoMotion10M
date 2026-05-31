@@ -123,6 +123,39 @@ def _generate_arlstm(midi_path: str, velocity_lookup):
     return rows
 
 
+def _generate_onnx(flat, velocity_lookup):
+    """Return list of (time, pitch, hand, finger_idx_1to5, duration, vel) via the
+    ONNX FingeringTransformer — torch-free, for edge/Jetson deployment. Lazy import
+    so the pianoplayer/arlstm paths never pull onnxruntime."""
+    import sys
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    if repo_root not in sys.path:
+        sys.path.insert(0, repo_root)
+    from onnx_fingering import predict_fingerings
+
+    notes = []
+    for n in flat.notes:
+        notes.append({
+            'left': int(n.pitch) < HAND_SPLIT,
+            'note': int(n.pitch),
+            'time': float(n.start) * 1000.0,                    # ms (model input)
+            'duration': max(50.0, float(n.end - n.start) * 1000.0),
+            '_start': float(n.start),                           # sec (survives .copy())
+        })
+    predicted = (predict_fingerings(notes, 'left', is_left=True)
+                 + predict_fingerings(notes, 'right', is_left=False))
+
+    rows = []
+    for r in predicted:
+        hand = 'left' if r['left'] else 'right'
+        t = float(r['_start'])
+        pitch = int(r['note'])
+        vel = velocity_lookup.get((round(t, 4), pitch), 64)
+        dur = (r.get('duration') or 100) / 1000.0
+        rows.append((t, pitch, hand, int(r['finger']), float(max(0.05, dur)), vel))
+    return rows
+
+
 def _pack_with_override(rows, midi_path: str, use_override: bool,
                        flat) -> list[ExpectedOnset]:
     """Apply manual override and emit ExpectedOnset list sorted by time."""
@@ -164,7 +197,9 @@ def generate_fingering(midi_path: str,
         midi_path: path to .mid / .midi file.
         hand_size: pianoplayer hand size 'XXS'..'XXL' (ignored when source != 'pianoplayer').
         use_override: if True, songs/<basename>_fingering.json per-note overrides apply.
-        source: 'arlstm' (default; Ramoneda 2022 SOTA) or 'pianoplayer' (Parncutt DP).
+        source: 'arlstm' (default; Ramoneda 2022 SOTA, needs torch), 'pianoplayer'
+            (Parncutt DP, torch-free), or 'onnx' (FingeringTransformer via
+            onnxruntime, torch-free — for edge/Jetson, see onnx_fingering.py).
 
     Returns:
         List[ExpectedOnset] sorted by (time, pitch).
@@ -177,8 +212,11 @@ def generate_fingering(midi_path: str,
         rows = _generate_pianoplayer(flat, velocity_lookup, hand_size)
     elif source == 'arlstm':
         rows = _generate_arlstm(midi_path, velocity_lookup)
+    elif source == 'onnx':
+        rows = _generate_onnx(flat, velocity_lookup)
     else:
-        raise ValueError(f"unknown source {source!r}; expected 'pianoplayer' or 'arlstm'")
+        raise ValueError(
+            f"unknown source {source!r}; expected 'pianoplayer', 'arlstm' or 'onnx'")
 
     return _pack_with_override(rows, midi_path, use_override, flat)
 
@@ -189,7 +227,7 @@ if __name__ == '__main__':
     p.add_argument('midi')
     p.add_argument('--size', default='M')
     p.add_argument('--source', default='arlstm',
-                   choices=['pianoplayer', 'arlstm'])
+                   choices=['pianoplayer', 'arlstm', 'onnx'])
     p.add_argument('--no-override', action='store_true')
     args = p.parse_args()
     out = generate_fingering(args.midi, hand_size=args.size,

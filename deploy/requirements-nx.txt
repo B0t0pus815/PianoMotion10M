@@ -13,5 +13,6 @@ pretty_midi
 python-rtmidi          # USB-MIDI from the e-piano
 websockets             # runner -> UI feedback bridge
 pianoplayer            # torch-free fingering (Parncutt DP)
+onnxruntime            # torch-free ONNX fingering (--fingering-source onnx); better than pianoplayer; aarch64 wheels exist
 mediapipe==0.10.14     # ⚠ ARM: may need NVIDIA aarch64 wheel instead
 opencv-python          # ⚠ ARM: prefer apt `python3-opencv` / JetPack build

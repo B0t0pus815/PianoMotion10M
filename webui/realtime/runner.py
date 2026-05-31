@@ -109,13 +109,14 @@ def main():
                    help='seconds to keep WS server alive after the run finishes '
                         '(so a late-connecting browser can backfill from history)')
     p.add_argument('--fingering-source',
-                   choices=['pianoplayer', 'arlstm', 'motion'],
+                   choices=['pianoplayer', 'arlstm', 'onnx', 'motion'],
                    default='arlstm',
                    help='Logic Track judge. "arlstm" = Ramoneda 2022 SOTA neural '
                         'model (default; best Soft Accuracy in four_way_audit.py). '
                         '"pianoplayer" = Parncutt DP (fast, deterministic, '
-                        'thumb-conservative). "motion" reproduces the v0 biomech-v4 '
-                        'heuristic, kept for thesis comparison only.')
+                        'thumb-conservative). "onnx" = FingeringTransformer via '
+                        'onnxruntime (torch-free, for edge/Jetson). "motion" '
+                        'reproduces the v0 biomech-v4 heuristic, thesis comparison only.')
     p.add_argument('--hand-size', default='M',
                    choices=['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'],
                    help='User hand size for pianoplayer (default M).')
@@ -142,12 +143,14 @@ def main():
     tracker = HandTracker(mirror=args.mirror)
 
     ref_midi = args.ref_midi or args.midi
-    if args.fingering_source in ('pianoplayer', 'arlstm'):
+    if args.fingering_source in ('pianoplayer', 'arlstm', 'onnx'):
         expected = generate_fingering(ref_midi, hand_size=args.hand_size,
                                       source=args.fingering_source)
-        src_label = ('Logic Track (pianoplayer, hand={})'.format(args.hand_size)
-                     if args.fingering_source == 'pianoplayer'
-                     else 'Logic Track (Ramoneda ArLSTM)')
+        src_label = {
+            'pianoplayer': 'Logic Track (pianoplayer, hand={})'.format(args.hand_size),
+            'arlstm': 'Logic Track (Ramoneda ArLSTM)',
+            'onnx': 'Logic Track (ONNX FingeringTransformer, torch-free)',
+        }[args.fingering_source]
         print(f'[ref] {len(expected)} expected onsets — {src_label} from {ref_midi}')
     else:
         expected = build_reference(ref_midi, args.reference, frame_width=args.ref_width)

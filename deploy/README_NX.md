@@ -115,11 +115,20 @@ journalctl -u handkeys-runner -f        # 看实时日志
 
 ---
 
-## 7. 备选：完全免 Python-torch 的指法（ONNX）
+## 7. ONNX 指法路（torch-free，已接线 ✅）
 
-仓库里 `external/piano-fingering-model/` 有导出好的 ONNX 指法模型
-（`js/models/fingering_transformer_{left,right}.onnx`）。若想连 pianoplayer 都不要、
-或想在浏览器里直接推理，可走 onnxruntime——**这条路本部署包尚未接线**（见进度表"未完成"）。
+`external/piano-fingering-model/` 的 ONNX 指法模型（FingeringTransformer）已接进
+Logic Track。实时判官加 `--fingering-source onnx` 即走 onnxruntime 推理，**完全不碰 torch**：
+
+```bash
+python -m webui.realtime.runner ... --fingering-source onnx ...
+# 或单测: python -m webui.realtime.fingering_engine "<song>.mid" --source onnx
+```
+
+质量介于 pianoplayer 与 ArLSTM 之间（Canon RH：**Hard 0.48 / Soft 0.66**，优于 pianoplayer
+的 0.39 / 0.58，略低于 ArLSTM 0.59 / 0.74），但**免 torch** —— 边缘设备上比 pianoplayer 更准、
+比 ArLSTM 更轻。依赖 `onnxruntime`（aarch64 有 ARM 轮子，已在 `requirements-nx.txt`）。
+实现见 `onnx_fingering.py`（token 构造与 `external/.../python/inference.py` 一致，仅前向换成 ort）。
 
 ---
 
