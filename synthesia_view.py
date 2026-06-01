@@ -28,6 +28,7 @@ import math
 import os
 import subprocess
 import sys
+import wave
 
 import numpy as np
 import cv2
@@ -161,7 +162,24 @@ def _active_keyboard_notes(events, t_now):
     return active
 
 
-def render(midi_path, mp3_path, out_path, source='arlstm'):
+def synth_audio_from_midi(midi_path: str, out_wav: str, fs: int = 44100) -> str:
+    """MIDI-only 曲目没有录音时, 用 pretty_midi 直接合成音轨 (纯正弦波, 无需
+    soundfont / fluidsynth)。画面与音轨同源于一份 MIDI, 故音画天然完全同步。
+    音色偏单薄但音高/时值清楚, 作为指法学习辅助足够。"""
+    pm = pretty_midi.PrettyMIDI(midi_path)
+    audio = pm.synthesize(fs=fs)                      # float64 单声道
+    peak = float(np.max(np.abs(audio))) if audio.size else 1.0
+    audio = (audio / (peak + 1e-9) * 0.89 * 32767.0).astype(np.int16)
+    with wave.open(out_wav, 'wb') as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(fs)
+        w.writeframes(audio.tobytes())
+    print(f'      合成音轨: {out_wav} ({len(audio) / fs:.1f}s)')
+    return out_wav
+
+
+def render(midi_path, audio_path, out_path, source='arlstm'):
     frame_width = _frame_width()
     events, end_time = load_note_events(midi_path, source)
     if not events:
@@ -182,7 +200,7 @@ def render(midi_path, mp3_path, out_path, source='arlstm'):
         FFMPEG, '-y',
         '-f', 'rawvideo', '-pix_fmt', 'bgr24',
         '-s', f'{frame_width}x{canvas_h}', '-r', str(FPS), '-i', 'pipe:0',
-        '-i', mp3_path,
+        '-i', audio_path,
         '-map', '0:v', '-map', '1:a',
         '-c:v', 'libx264', '-preset', 'medium', '-crf', '20',
         '-c:a', 'aac', '-pix_fmt', 'yuv420p', '-shortest',
@@ -217,18 +235,29 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--midi', required=True, help='已转录/清洗好的 .mid')
-    ap.add_argument('--mp3', required=True, help='配乐音轨')
+    ap.add_argument('--mp3', default=None,
+                    help='配乐音轨; 省略则用 pretty_midi 从 --midi 合成 '
+                         '(适合无录音的 MIDI-only 曲目, 音画完全同步)')
     ap.add_argument('--out', required=True, help='输出 mp4')
     ap.add_argument('--source', default='arlstm',
                     choices=['arlstm', 'pianoplayer', 'onnx'],
                     help='指法来源 (默认 arlstm = Logic Track 推荐指法)')
     args = ap.parse_args()
 
-    for p in (args.midi, args.mp3):
-        if not os.path.exists(p):
-            sys.exit(f'找不到文件: {p}')
+    if not os.path.exists(args.midi):
+        sys.exit(f'找不到 MIDI: {args.midi}')
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
-    render(args.midi, args.mp3, args.out, source=args.source)
+
+    if args.mp3:
+        if not os.path.exists(args.mp3):
+            sys.exit(f'找不到音轨: {args.mp3}')
+        audio_path = args.mp3
+    else:
+        audio_path = os.path.splitext(os.path.abspath(args.out))[0] + '_synth.wav'
+        print('[synthesia] 未提供 --mp3 → 用 pretty_midi 合成音轨 (MIDI-only 曲目)')
+        synth_audio_from_midi(args.midi, audio_path)
+
+    render(args.midi, audio_path, args.out, source=args.source)
 
 
 if __name__ == '__main__':
