@@ -536,11 +536,17 @@ function PracticeScreen({ song, onEnd, onBack }) {
   const totalMins = Math.floor(duration / 60);
   const totalSecs = String(Math.floor(duration % 60)).padStart(2, '0');
 
-  const handsSrc = song?.videoUrl || '../results/canon_arlstm_kb.mp4';
+  const handsSrc = song?.videoUrl;            // 可能为空: Synthesia-only 曲目 (无手部渲染)
   const synthesiaSrc = song?.synthesiaUrl;
-  const showSynthesia = viewMode === 'synthesia' && synthesiaSrc;
-  const videoSrc = showSynthesia ? synthesiaSrc : handsSrc;
+  const hasHands = !!handsSrc;
+  // 实际视图: 优先用户选择, 但缺资源就退到存在的那个 (Synthesia-only 曲目强制 synthesia)
+  const showSynthesia = synthesiaSrc && (viewMode === 'synthesia' || !hasHands);
+  const videoSrc = showSynthesia ? synthesiaSrc : (handsSrc || '../results/canon_arlstm_kb.mp4');
   const videoLabel = showSynthesia ? 'Synthesia · Logic Track 指法' : 'AI · ArLSTM × biomech v4';
+  const viewModes = [
+    ...(hasHands ? [{ k: 'hands', label: '手部示範' }] : []),
+    ...(synthesiaSrc ? [{ k: 'synthesia', label: 'Synthesia 指法' }] : []),
+  ];
   const audioSrc = song?.audioUrl;
 
   return (
@@ -597,17 +603,14 @@ function PracticeScreen({ song, onEnd, onBack }) {
 
       {/* Hero video — 手部渲染 (biomech v4) ↔ 无手 Synthesia 落音条视图 */}
       <div style={{ padding: '0 20px 12px' }}>
-        {synthesiaSrc && (
+        {viewModes.length > 1 && (
           <div style={{
             display: 'flex', gap: 4, marginBottom: 8,
             padding: 3, borderRadius: 10, width: 'fit-content',
             background: HK.surface2, border: `1px solid ${HK.hairlineStrong}`,
           }}>
-            {[
-              { k: 'hands', label: '手部示範' },
-              { k: 'synthesia', label: 'Synthesia 指法' },
-            ].map(opt => {
-              const on = viewMode === opt.k;
+            {viewModes.map(opt => {
+              const on = (opt.k === 'synthesia') === !!showSynthesia;
               return (
                 <button key={opt.k} onClick={() => setViewMode(opt.k)} style={{
                   border: 'none', cursor: 'pointer',

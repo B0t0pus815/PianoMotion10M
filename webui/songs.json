@@ -25,5 +25,29 @@
     "videoUrl": "../results/summer_arlstm_LABELED.mp4",
     "synthesiaUrl": "../results/summer_synthesia.mp4",
     "audioUrl": "../input_songs/[Piano Cover] 久石讓 Joe Hisaishi - 菊次郎的夏天(Summer)一聽前奏就知道的旋律.mp3"
+  },
+  {
+    "id": "bach_inv1",
+    "title": "Invention No.1 BWV 772",
+    "composer": "J.S. Bach",
+    "diff": "Intermediate",
+    "dur": "1:07",
+    "key": "C 大調",
+    "popularity": 80,
+    "accent": "#5CE5A7",
+    "synthesiaUrl": "../results/bach_invention_synthesia.mp4",
+    "audioUrl": "../results/bach_invention_synthesia_synth.wav"
+  },
+  {
+    "id": "beethoven_op2no1",
+    "title": "Sonata Op.2 No.1 — I. Allegro",
+    "composer": "Beethoven",
+    "diff": "Advanced",
+    "dur": "3:13",
+    "key": "F 小調",
+    "popularity": 75,
+    "accent": "#C792EA",
+    "synthesiaUrl": "../results/beethoven_op2no1_synthesia.mp4",
+    "audioUrl": "../results/beethoven_op2no1_synthesia_synth.wav"
   }
 ]
