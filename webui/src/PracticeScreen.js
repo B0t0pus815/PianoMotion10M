@@ -380,7 +380,7 @@ function Staff({ measures, width = 340, height = 110 }) {
 }
 
 // ─── Stage B render (ArLSTM × biomech v4) as the practice hero ──
-function GestureVideo({ src, playing, onTimeUpdate, onDuration, audioSrc, children }) {
+function GestureVideo({ src, playing, onTimeUpdate, onDuration, audioSrc, label, children }) {
   const videoRef = React.useRef(null);
   const audioRef = React.useRef(null);
 
@@ -414,7 +414,14 @@ function GestureVideo({ src, playing, onTimeUpdate, onDuration, audioSrc, childr
         muted
         loop={false}
         onTimeUpdate={(e) => onTimeUpdate && onTimeUpdate(e.currentTarget.currentTime)}
-        onLoadedMetadata={(e) => onDuration && onDuration(e.currentTarget.duration)}
+        onLoadedMetadata={(e) => {
+          onDuration && onDuration(e.currentTarget.duration);
+          // 切换视图会换 src → 新 video 从 0 重载: 对齐到独立音轨当前位置并续播,
+          // 避免跳回开头或与声音失步。
+          const a = audioRef.current;
+          if (a && !a.paused) { try { e.currentTarget.currentTime = a.currentTime; } catch (_) {} }
+          if (playing) e.currentTarget.play().catch(() => {});
+        }}
         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />
       {audioSrc && (
@@ -432,7 +439,7 @@ function GestureVideo({ src, playing, onTimeUpdate, onDuration, audioSrc, childr
           animation: 'hkblink 1.2s infinite',
         }}/>
         <span style={{ fontFamily: HK.fontMono, fontSize: 9, fontWeight: 600, color: HK.text, letterSpacing: 0.7 }}>
-          AI · ArLSTM × biomech v4
+          {label || 'AI · ArLSTM × biomech v4'}
         </span>
       </div>
       <div style={{
@@ -493,6 +500,8 @@ function PracticeScreen({ song, onEnd, onBack }) {
   const [playing, setPlaying] = React.useState(true);
   const [elapsed, setElapsed] = React.useState(0);
   const [duration, setDuration] = React.useState(song?.dur ? parseDur(song.dur) : 205);
+  // 'hands' = 渲染手部 (biomech v4, 带准确键号) | 'synthesia' = 无手落音条视图
+  const [viewMode, setViewMode] = React.useState('hands');
 
   // Real-time feedback from the Python runner (WebSocket on 8766)
   const { connected, meta, stats, statusMap, recording, clips, popReady } = useFeedbackStream(HK_WS_URL);
@@ -527,7 +536,11 @@ function PracticeScreen({ song, onEnd, onBack }) {
   const totalMins = Math.floor(duration / 60);
   const totalSecs = String(Math.floor(duration % 60)).padStart(2, '0');
 
-  const videoSrc = song?.videoUrl || '../results/canon_arlstm_kb.mp4';
+  const handsSrc = song?.videoUrl || '../results/canon_arlstm_kb.mp4';
+  const synthesiaSrc = song?.synthesiaUrl;
+  const showSynthesia = viewMode === 'synthesia' && synthesiaSrc;
+  const videoSrc = showSynthesia ? synthesiaSrc : handsSrc;
+  const videoLabel = showSynthesia ? 'Synthesia · Logic Track 指法' : 'AI · ArLSTM × biomech v4';
   const audioSrc = song?.audioUrl;
 
   return (
@@ -582,11 +595,36 @@ function PracticeScreen({ song, onEnd, onBack }) {
         </div>
       </div>
 
-      {/* Hero video — Stage B (ArLSTM × biomech v4) + keyboard overlay */}
+      {/* Hero video — 手部渲染 (biomech v4) ↔ 无手 Synthesia 落音条视图 */}
       <div style={{ padding: '0 20px 12px' }}>
+        {synthesiaSrc && (
+          <div style={{
+            display: 'flex', gap: 4, marginBottom: 8,
+            padding: 3, borderRadius: 10, width: 'fit-content',
+            background: HK.surface2, border: `1px solid ${HK.hairlineStrong}`,
+          }}>
+            {[
+              { k: 'hands', label: '手部示範' },
+              { k: 'synthesia', label: 'Synthesia 指法' },
+            ].map(opt => {
+              const on = viewMode === opt.k;
+              return (
+                <button key={opt.k} onClick={() => setViewMode(opt.k)} style={{
+                  border: 'none', cursor: 'pointer',
+                  padding: '5px 12px', borderRadius: 8,
+                  fontFamily: HK.fontMono, fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+                  background: on ? HK.blue : 'transparent',
+                  color: on ? '#001018' : HK.textMuted,
+                  transition: 'background 0.15s, color 0.15s',
+                }}>{opt.label}</button>
+              );
+            })}
+          </div>
+        )}
         <GestureVideo
           src={videoSrc}
           audioSrc={audioSrc}
+          label={videoLabel}
           playing={playing}
           onTimeUpdate={handleTimeUpdate}
           onDuration={setDuration}

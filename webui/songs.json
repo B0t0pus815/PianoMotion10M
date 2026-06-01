@@ -9,6 +9,7 @@
     "popularity": 98,
     "accent": "#4FC3F7",
     "videoUrl": "../results/canon_arlstm_LABELED.mp4",
+    "synthesiaUrl": "../results/canon_synthesia.mp4",
     "audioUrl": "../input_songs/Canon In D - Pachelbel  EASY Piano Tutorial.mp3",
     "scoreUrl": "../songs/canon_with_fingering.musicxml"
   },
@@ -22,6 +23,7 @@
     "popularity": 92,
     "accent": "#FFD700",
     "videoUrl": "../results/summer_arlstm_LABELED.mp4",
+    "synthesiaUrl": "../results/summer_synthesia.mp4",
     "audioUrl": "../input_songs/[Piano Cover] 久石讓 Joe Hisaishi - 菊次郎的夏天(Summer)一聽前奏就知道的旋律.mp3"
   }
 ]
