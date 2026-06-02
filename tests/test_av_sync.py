@@ -10,7 +10,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from webui.realtime.av_sync import estimate_offset
+import numpy as np
+
+from webui.realtime.av_sync import estimate_offset, best_lag_frames
 
 
 def midi_train(n=40, dt=0.5):
@@ -54,3 +56,34 @@ def test_negative_offset():
 def test_empty_inputs():
     assert estimate_offset([], midi_train()) == (0.0, 0, 0.0)
     assert estimate_offset(midi_train(), []) == (0.0, 0, 0.0)
+
+
+# ── envelope cross-correlation core (disambiguates periodic onsets) ──
+
+def _bumps(length, positions, height=1.0, width=3):
+    sig = np.zeros(length)
+    for p, h in positions:
+        for d in range(-width, width + 1):
+            i = p + d
+            if 0 <= i < length:
+                sig[i] += h * max(0.0, 1 - abs(d) / (width + 1))
+    return sig
+
+
+def test_best_lag_recovers_known_shift():
+    # amplitude pattern (varying heights) shifted by +40 frames
+    pos = [(50, 1.0), (90, 0.4), (130, 0.9), (175, 0.5), (210, 1.0)]
+    b = _bumps(400, pos)
+    a = _bumps(400, [(p + 40, h) for p, h in pos])
+    assert best_lag_frames(a, b, max_lag=80) == pytest.approx(40, abs=1)
+
+
+def test_best_lag_disambiguates_periodic_via_amplitude():
+    # near-evenly-spaced events (period 40) but DISTINCT heights — the wrong
+    # period-multiple lag must lose to the true lag (the Canon failure mode).
+    heights = [1.0, 0.3, 0.8, 0.5, 0.95, 0.35]
+    pos = [(40 + 40 * i, h) for i, h in enumerate(heights)]
+    b = _bumps(500, pos)
+    a = _bumps(500, [(p + 12, h) for p, h in pos])   # true shift +12
+    lag = best_lag_frames(a, b, max_lag=120)
+    assert lag == pytest.approx(12, abs=1)           # not 12±40, 12±80, ...
