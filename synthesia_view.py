@@ -162,20 +162,55 @@ def _active_keyboard_notes(events, t_now):
     return active
 
 
+# 近钢琴的泛音幅度 (基频 + 递减泛音) 与衰减时间常数
+_HARMONICS = np.array([1.0, 0.45, 0.28, 0.16, 0.09, 0.05])
+_DECAY_TAU = 0.9      # 指数衰减 (秒); 越大延音越长
+_ATTACK_S = 0.004     # 起音斜坡, 防爆音
+_RELEASE_S = 0.06     # 释放淡出
+_RING_S = 0.35        # 抬键后的余响尾巴
+
+
 def synth_audio_from_midi(midi_path: str, out_wav: str, fs: int = 44100) -> str:
-    """MIDI-only 曲目没有录音时, 用 pretty_midi 直接合成音轨 (纯正弦波, 无需
-    soundfont / fluidsynth)。画面与音轨同源于一份 MIDI, 故音画天然完全同步。
-    音色偏单薄但音高/时值清楚, 作为指法学习辅助足够。"""
+    """MIDI-only 曲目没有录音时, 用一个轻量加法合成器从 MIDI 直接生成音轨:
+    每个音 = 6 个泛音正弦 × 指数衰减包络 (起音斜坡 + 释放淡出), 按力度缩放。
+    比纯正弦更接近钢琴, 无需 soundfont / fluidsynth。画面与音轨同源于一份
+    MIDI, 故音画精确同步。"""
     pm = pretty_midi.PrettyMIDI(midi_path)
-    audio = pm.synthesize(fs=fs)                      # float64 单声道
-    peak = float(np.max(np.abs(audio))) if audio.size else 1.0
-    audio = (audio / (peak + 1e-9) * 0.89 * 32767.0).astype(np.int16)
+    notes = [n for inst in pm.instruments if not inst.is_drum for n in inst.notes]
+    end = pm.get_end_time() + _RING_S + 0.1
+    buf = np.zeros(int(end * fs) + 1, dtype=np.float64)
+
+    a_len = int(_ATTACK_S * fs)
+    r_len = int(_RELEASE_S * fs)
+    for n in notes:
+        f0 = 440.0 * 2.0 ** ((n.pitch - 69) / 12.0)
+        ns = int(((n.end - n.start) + _RING_S) * fs)
+        if ns <= 2:
+            continue
+        t = np.arange(ns) / fs
+        env = np.exp(-t / _DECAY_TAU)
+        if a_len > 1:
+            env[:a_len] *= np.linspace(0.0, 1.0, a_len)
+        if r_len > 1 and ns > r_len:
+            env[-r_len:] *= np.linspace(1.0, 0.0, r_len)
+        wave_n = np.zeros(ns)
+        for k, amp in enumerate(_HARMONICS, start=1):
+            if f0 * k < fs / 2:                       # 避免混叠
+                wave_n += amp * np.sin(2.0 * np.pi * f0 * k * t)
+        vel = (n.velocity / 127.0) ** 1.2
+        s = int(n.start * fs)
+        seg = buf[s:s + ns]
+        m = min(len(seg), ns)
+        buf[s:s + m] += vel * env[:m] * wave_n[:m]
+
+    peak = float(np.max(np.abs(buf))) if buf.size else 1.0
+    audio = (buf / (peak + 1e-9) * 0.89 * 32767.0).astype(np.int16)
     with wave.open(out_wav, 'wb') as w:
         w.setnchannels(1)
         w.setsampwidth(2)
         w.setframerate(fs)
         w.writeframes(audio.tobytes())
-    print(f'      合成音轨: {out_wav} ({len(audio) / fs:.1f}s)')
+    print(f'      合成音轨: {out_wav} ({len(audio) / fs:.1f}s, 加法合成 {len(notes)} 音)')
     return out_wav
 
 
@@ -254,7 +289,7 @@ def main():
         audio_path = args.mp3
     else:
         audio_path = os.path.splitext(os.path.abspath(args.out))[0] + '_synth.wav'
-        print('[synthesia] 未提供 --mp3 → 用 pretty_midi 合成音轨 (MIDI-only 曲目)')
+        print('[synthesia] 未提供 --mp3 → 加法合成音轨 (谐波+衰减, MIDI-only 曲目)')
         synth_audio_from_midi(args.midi, audio_path)
 
     render(args.midi, audio_path, args.out, source=args.source)
