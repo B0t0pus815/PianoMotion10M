@@ -135,6 +135,13 @@ def main():
     p.add_argument('--clip-post', type=float, default=5.0,
                    help='Seconds to record after trigger (default 5).')
     p.add_argument('--clip-output-dir', default='clips')
+    p.add_argument('--auto-sync', action='store_true',
+                   help='auto-align the MIDI to the recording: estimate the A/V '
+                        'offset δ (av_sync, onset-envelope x-corr) and shift the '
+                        'video clock by −δ so onsets line up — no manual slate.')
+    p.add_argument('--sync-audio', default=None,
+                   help='audio/video file to sync against (default: --video when '
+                        'it is a file).')
     args = p.parse_args()
 
     vsrc = int(args.video) if args.video.isdigit() else args.video
@@ -198,6 +205,26 @@ def main():
     from webui.realtime.note_align import build_match_map, notes_from_midi
     ref_notes = notes_from_midi(ref_midi)
 
+    # Auto-sync: estimate the A/V offset δ (video ≈ midi + δ) and convert each
+    # video frame time to MIDI time with (frame.timestamp − δ), so MIDI onsets
+    # and the hand history line up with the expected onsets without a manual slate.
+    sync_offset = 0.0
+    if args.auto_sync:
+        sync_audio = args.sync_audio or (args.video if os.path.exists(str(args.video)) else None)
+        if not sync_audio:
+            print('[sync] --auto-sync needs an audio source (--sync-audio or a file '
+                  '--video); skipping (offset 0).')
+        else:
+            try:
+                from webui.realtime.av_sync import estimate_offset_xcorr
+                sync_offset, _peak, norm = estimate_offset_xcorr(sync_audio, args.midi)
+                print(f'[sync] A/V offset δ={sync_offset:+.3f}s (norm peak {norm:.3f}) '
+                      f'→ video clock shifted by −δ' +
+                      ('  ⚠ weak correlation' if norm < 0.05 else ''))
+            except Exception as exc:  # noqa: BLE001 — never let sync estimation abort the run
+                sync_offset = 0.0
+                print(f'[sync] auto-sync failed ({exc}); offset 0.')
+
     # Replay mode: the whole played MIDI is known up front, so attribute each
     # played note to its expected onset via the global sequence alignment
     # (handles misses/extras/tempo-drift) instead of the greedy ±window search.
@@ -248,11 +275,15 @@ def main():
         for frame in video:
             ts_ms = int(frame.timestamp * 1000)
             hands = tracker.process(frame.image, ts_ms)
-            history.push(frame.timestamp, hands)
+            # MIDI-clock time for this frame (== video time when not auto-synced).
+            # History + MIDI polling run on the MIDI clock so they line up with the
+            # expected onsets; clip recording stays on the video clock.
+            eff_t = frame.timestamp - sync_offset
+            history.push(eff_t, hands)
             if clip_recorder:
                 clip_recorder.push_frame(frame.timestamp, frame.image)
 
-            for ev in midi.poll(frame.timestamp):
+            for ev in midi.poll(eff_t):
                 if ev.type != 'note_on':
                     continue
                 played_notes.append((ev.timestamp, ev.note))
