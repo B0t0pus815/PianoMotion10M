@@ -188,6 +188,7 @@ def main():
                                                      cluster_window=CHORD_CLUSTER_WINDOW)
     history = HandHistory(capacity=180)
     results: list[OnsetResult] = []
+    played_notes: list[tuple] = []   # (time, pitch) of every played note_on, for note-level alignment
     onset_cursor = 0
 
     clip_recorder = None
@@ -235,6 +236,7 @@ def main():
             for ev in midi.poll(frame.timestamp):
                 if ev.type != 'note_on':
                     continue
+                played_notes.append((ev.timestamp, ev.note))
                 best_j = None
                 best_dt = MATCH_WINDOW
                 for j in range(onset_cursor, min(onset_cursor + 30, len(expected))):
@@ -302,10 +304,37 @@ def main():
     print(f'  Wrong finger:           {wrong}')
     print(f'  Hand not detected:      {no_hand}')
 
+    # Note-level accuracy, decoupled from fingering: align the played stream to
+    # the reference (tempo-invariant) so wrong/missing/extra notes — which the
+    # live finger-matching silently drops — get counted. The warp also yields a
+    # played→reference tempo scale/offset usable for A/V-MIDI sync.
+    from webui.realtime.note_align import align as align_notes, estimate_offset_scale
+    na = align_notes(played_notes, [(e.time, e.pitch) for e in expected])
+    n_scale, n_offset, n_rms = estimate_offset_scale(na.warp)
+    print(f'  Note accuracy:          {na.correct}/{na.n_expected} '
+          f'({100 * na.note_accuracy:.1f}%)  '
+          f'wrong={na.wrong} missing={na.missing} extra={na.extra}')
+    print(f'  Tempo (played→ref):     scale={n_scale:.3f} offset={n_offset:+.2f}s rms={n_rms:.3f}s')
+
     if args.output_json:
         import json
         with open(args.output_json, 'w') as f:
-            json.dump([r.__dict__ for r in results], f, indent=2)
+            json.dump({
+                'fingering': {
+                    'evaluated': n, 'reference': len(expected),
+                    'correct': correct, 'wrong': wrong, 'no_hand': no_hand,
+                },
+                'notes': {
+                    'accuracy': round(na.note_accuracy, 4),
+                    'correct': na.correct, 'wrong': na.wrong,
+                    'missing': na.missing, 'extra': na.extra,
+                    'played': na.n_played, 'reference': na.n_expected,
+                    'tempo_scale': round(n_scale, 4),
+                    'tempo_offset_s': round(n_offset, 3),
+                    'align_rms_s': round(n_rms, 4),
+                },
+                'onsets': [r.__dict__ for r in results],
+            }, f, indent=2)
         print(f'  Results written → {args.output_json}')
 
     if broadcaster:
@@ -315,6 +344,9 @@ def main():
             'correct': correct,
             'wrong': wrong,
             'no_hand': no_hand,
+            'note_accuracy': round(na.note_accuracy, 4),
+            'notes_missing': na.missing,
+            'notes_extra': na.extra,
         })
         if args.ws_linger > 0:
             import time
