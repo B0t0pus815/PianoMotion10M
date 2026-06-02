@@ -13,7 +13,8 @@
     "audioUrl": "../input_songs/Canon In D - Pachelbel  EASY Piano Tutorial.mp3",
     "scoreUrl": "../songs/canon_with_fingering.musicxml",
     "scoreStartSec": 13.75,
-    "scoreEndSec": 183.16
+    "scoreEndSec": 183.16,
+    "tempo": 120
   },
   {
     "id": "summer",

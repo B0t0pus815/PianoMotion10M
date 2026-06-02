@@ -676,7 +676,7 @@ function PracticeScreen({ song, onEnd, onBack }) {
             fontFamily: HK.fontMono, fontSize: 10, color: HK.textMuted, letterSpacing: 1.3, fontWeight: 600,
           }}>
             <span>{song?.scoreUrl ? '樂譜 · MusicXML (OSMD)' : '樂譜 · 概念示意'}</span>
-            <span style={{ color: HK.gold }}>♩ = 76</span>
+            {song?.tempo ? <span style={{ color: HK.gold }}>♩ = {song.tempo}</span> : <span/>}
           </div>
           <OSMDScore
             scoreUrl={song?.scoreUrl}
