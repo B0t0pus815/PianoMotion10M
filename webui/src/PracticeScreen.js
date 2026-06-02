@@ -681,6 +681,8 @@ function PracticeScreen({ song, onEnd, onBack }) {
           <OSMDScore
             scoreUrl={song?.scoreUrl}
             highlightTime={elapsed}
+            startSec={song?.scoreStartSec || 0}
+            endSec={song?.scoreEndSec ?? null}
             height={180}
             fallback={<Staff measures={[MEASURE_1, MEASURE_2]}/>}
           />
