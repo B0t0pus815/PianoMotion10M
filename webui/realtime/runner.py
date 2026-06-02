@@ -191,6 +191,25 @@ def main():
     played_notes: list[tuple] = []   # (time, pitch) of every played note_on, for note-level alignment
     onset_cursor = 0
 
+    # Faithful reference note times (raw MIDI) — used for note-level alignment;
+    # generate_fingering's ExpectedOnset .time carries per-note offsets that would
+    # perturb the alignment, so we align against the raw notes and bridge to the
+    # expected onsets by (pitch, rank).
+    from webui.realtime.note_align import build_match_map, notes_from_midi
+    ref_notes = notes_from_midi(ref_midi)
+
+    # Replay mode: the whole played MIDI is known up front, so attribute each
+    # played note to its expected onset via the global sequence alignment
+    # (handles misses/extras/tempo-drift) instead of the greedy ±window search.
+    # Live mode keeps the greedy fallback (notes arrive incrementally).
+    align_map = None
+    replay_events = midi.replay_events()
+    if replay_events:
+        played_pre = [(e.timestamp, e.note) for e in replay_events if e.type == 'note_on']
+        align_map = build_match_map(played_pre, ref_notes, expected=expected)
+        print(f'[align] replay: {len(align_map)}/{len(played_pre)} played notes '
+              f'matched to reference onsets (global alignment)')
+
     clip_recorder = None
     if args.clip_record:
         clip_cfg = ClipConfig(
@@ -237,15 +256,23 @@ def main():
                 if ev.type != 'note_on':
                     continue
                 played_notes.append((ev.timestamp, ev.note))
-                best_j = None
-                best_dt = MATCH_WINDOW
-                for j in range(onset_cursor, min(onset_cursor + 30, len(expected))):
-                    e = expected[j]
-                    dt = abs(e.time - ev.timestamp)
-                    if dt < best_dt and e.pitch == ev.note:
-                        best_j, best_dt = j, dt
-                if best_j is None:
-                    continue
+                if align_map is not None:
+                    # global-alignment attribution (replay); None = extra/wrong
+                    # note with no reference match → counted in the note report,
+                    # not finger-judged.
+                    best_j = align_map.get((ev.timestamp, ev.note))
+                    if best_j is None:
+                        continue
+                else:
+                    best_j = None
+                    best_dt = MATCH_WINDOW
+                    for j in range(onset_cursor, min(onset_cursor + 30, len(expected))):
+                        e = expected[j]
+                        dt = abs(e.time - ev.timestamp)
+                        if dt < best_dt and e.pitch == ev.note:
+                            best_j, best_dt = j, dt
+                    if best_j is None:
+                        continue
                 e = expected[best_j]
                 r = compare_onset(history, e, alt_finger_idxs=chord_finger_sets.get(best_j))
                 results.append(r)
@@ -309,7 +336,7 @@ def main():
     # live finger-matching silently drops — get counted. The warp also yields a
     # played→reference tempo scale/offset usable for A/V-MIDI sync.
     from webui.realtime.note_align import align as align_notes, estimate_offset_scale
-    na = align_notes(played_notes, [(e.time, e.pitch) for e in expected])
+    na = align_notes(played_notes, ref_notes)
     n_scale, n_offset, n_rms = estimate_offset_scale(na.warp)
     print(f'  Note accuracy:          {na.correct}/{na.n_expected} '
           f'({100 * na.note_accuracy:.1f}%)  '

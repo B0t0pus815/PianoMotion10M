@@ -11,7 +11,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from webui.realtime.note_align import align, estimate_offset_scale
+from webui.realtime.note_align import align, estimate_offset_scale, build_match_map
 
 
 def seq(pitches, t0=0.0, dt=0.5):
@@ -84,6 +84,43 @@ def test_chord_order_independent():
     b = [(0.0, 60), (0.0, 67), (0.0, 64)]
     r = align(a, b)
     assert r.correct == 3 and r.wrong == 0
+
+
+def test_build_match_map_identity():
+    p = seq(REF)
+    mm = build_match_map(p, seq(REF))
+    assert len(mm) == len(REF)
+    for i, (t, pitch) in enumerate(p):
+        assert mm[(t, pitch)] == i      # i-th played note → i-th expected onset
+
+
+def test_build_match_map_skips_extra_and_shifts_correctly():
+    # extra stray note at t=2.0; the real notes must still map to the right
+    # expected indices (greedy ±window would mis-attribute after the extra).
+    played = seq(REF[:4]) + [(2.0, 99)] + seq(REF[4:], t0=2.5)
+    mm = build_match_map(played, seq(REF))
+    assert (2.0, 99) not in mm          # extra note not finger-judged
+    assert len(mm) == len(REF)
+    assert mm[(2.5, REF[4])] == 4       # note after the extra still maps to expected idx 4
+
+
+class _Exp:
+    """Minimal expected-onset stand-in with .time/.pitch."""
+    def __init__(self, t, p):
+        self.time = t
+        self.pitch = p
+
+
+def test_build_match_map_bridges_time_shifted_expected():
+    # 'expected' = same notes as the faithful reference but with a -50ms offset
+    # on alternate notes (mimics generate_fingering). The (pitch,rank) bridge
+    # must still map each played note to the correct expected index.
+    ref = seq(REF)
+    expected = [_Exp(t - (0.05 if i % 2 else 0.0), p) for i, (t, p) in enumerate(ref)]
+    mm = build_match_map(ref, ref, expected=expected)   # played == faithful ref
+    assert len(mm) == len(REF)
+    for i, (t, p) in enumerate(ref):
+        assert mm[(t, p)] == i      # correct expected index despite the shifts
 
 
 def test_warp_recovers_tempo_scale_and_offset():

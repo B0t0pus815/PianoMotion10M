@@ -139,6 +139,50 @@ def align(played, expected) -> AlignResult:
                        matched_pairs=matched_pairs, warp=warp)
 
 
+def build_match_map(played, reference, expected=None) -> dict:
+    """Map each correctly-played note's (time, pitch) → an onset INDEX it aligns
+    to (only 'match' pairs; wrong/extra notes are absent).
+
+    Lets the live judge attribute fingering via the global alignment instead of
+    a greedy ±window search — so a missed or extra note no longer shifts every
+    later note onto the wrong expected onset. Keys are (float time, int pitch)
+    exactly as in `played`, so callers can look up a fired event directly.
+
+    `reference` must be the FAITHFUL reference note times (e.g. raw MIDI), so the
+    alignment isn't perturbed by per-note time offsets. If `expected` is given
+    (e.g. generate_fingering's ExpectedOnset list — same notes as `reference` but
+    with shifted .time), the returned index is into `expected`, bridged by
+    (pitch, occurrence-rank) which is stable under those shifts. Otherwise the
+    index is into the (time,pitch)-sorted `reference`.
+    """
+    res = align(played, reference)
+    P = sorted((_pt(n) for n in played), key=lambda x: (x[0], x[1]))
+    if expected is None:
+        return {P[pi]: ri for (pi, ri) in res.matched_pairs}
+
+    # Bridge reference-sorted-index → expected-original-index via (pitch, rank),
+    # ranking each side independently in (time, pitch) order so a uniform per-note
+    # time offset (which preserves same-pitch ordering) doesn't break the pairing.
+    from collections import defaultdict
+    R = sorted((_pt(n) for n in reference), key=lambda x: (x[0], x[1]))
+    ref_rank, cnt = [], defaultdict(int)
+    for _, p in R:
+        ref_rank.append((p, cnt[p]))
+        cnt[p] += 1
+    exp_idx_by_rank, cnt2 = {}, defaultdict(int)
+    for oi in sorted(range(len(expected)),
+                     key=lambda i: (_pt(expected[i])[0], _pt(expected[i])[1])):
+        p = _pt(expected[oi])[1]
+        exp_idx_by_rank[(p, cnt2[p])] = oi
+        cnt2[p] += 1
+    out = {}
+    for (pi, ri) in res.matched_pairs:
+        ei = exp_idx_by_rank.get(ref_rank[ri])
+        if ei is not None:
+            out[P[pi]] = ei
+    return out
+
+
 def estimate_offset_scale(warp) -> tuple:
     """Least-squares fit expected_t ≈ scale * played_t + offset over matched
     pairs. Returns (scale, offset, rms_residual_seconds). scale>1 means the
