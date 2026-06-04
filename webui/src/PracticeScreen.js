@@ -28,6 +28,9 @@ function useFeedbackStream(url) {
   const [recording, setRecording] = React.useState(null);  // null | {time, errorRate, windowSize}
   const [clips, setClips] = React.useState([]);  // [{path, time, errorRate, duration, ...}]
   const pendingRef = React.useRef([]);
+  const firedRef = React.useRef([]);        // every fired onset, for the report card
+  const lastDoneRef = React.useRef(null);
+  const [report, setReport] = React.useState(null);  // null | { events, summary }
 
   React.useEffect(() => {
     let stopped = false;
@@ -49,6 +52,9 @@ function useFeedbackStream(url) {
         if (d.type === 'ready') {
           // New run — reset state
           pendingRef.current = [];
+          firedRef.current = [];
+          lastDoneRef.current = null;
+          setReport(null);
           setMeta({
             expected_count: d.expected_count,
             video: d.video,
@@ -82,6 +88,9 @@ function useFeedbackStream(url) {
               pendingRef.current[pendingRef.current.length - 2].time > d.time) {
             pendingRef.current.sort((a, b) => a.time - b.time);
           }
+        } else if (d.type === 'done') {
+          lastDoneRef.current = d;
+          setReport({ events: firedRef.current.slice(), summary: d });
         }
       };
     };
@@ -103,6 +112,7 @@ function useFeedbackStream(url) {
       fired.push(pendingRef.current.shift());
     }
     if (fired.length === 0) return null;
+    for (const r of fired) firedRef.current.push(r);
     setStats(s => {
       let { total, correct, wrong, noHand } = s;
       for (const r of fired) {
@@ -126,7 +136,13 @@ function useFeedbackStream(url) {
     return fired[fired.length - 1];
   }, []);
 
-  return { connected, meta, stats, statusMap, recording, clips, popReady };
+  const dismissReport = React.useCallback(() => setReport(null), []);
+  const showReportNow = React.useCallback(() => {
+    setReport({ events: firedRef.current.slice(), summary: lastDoneRef.current || {} });
+  }, []);
+
+  return { connected, meta, stats, statusMap, recording, clips, popReady,
+           report, dismissReport, showReportNow };
 }
 
 // ─── Recording banner (visible while clip_recorder is active) ────
@@ -380,7 +396,7 @@ function Staff({ measures, width = 340, height = 110 }) {
 }
 
 // ─── Stage B render (ArLSTM × biomech v4) as the practice hero ──
-function GestureVideo({ src, playing, onTimeUpdate, onDuration, audioSrc, label, children }) {
+function GestureVideo({ src, playing, onTimeUpdate, onDuration, onEnded, audioSrc, label, children }) {
   const videoRef = React.useRef(null);
   const audioRef = React.useRef(null);
 
@@ -414,6 +430,7 @@ function GestureVideo({ src, playing, onTimeUpdate, onDuration, audioSrc, label,
         muted
         loop={false}
         onTimeUpdate={(e) => onTimeUpdate && onTimeUpdate(e.currentTarget.currentTime)}
+        onEnded={() => onEnded && onEnded()}
         onLoadedMetadata={(e) => {
           onDuration && onDuration(e.currentTarget.duration);
           // 切换视图会换 src → 新 video 从 0 重载: 对齐到独立音轨当前位置并续播,
@@ -496,15 +513,191 @@ function MetricChip({ icon, label, value, color = HK.text }) {
   );
 }
 
+// ─── Post-performance report card ───────────────────────────────
+const FINGER_NUM_JS = { thumb: '1', index: '2', middle: '3', ring: '4', pinky: '5' };
+const PITCH_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+function pitchName(p) {
+  if (p == null) return '?';
+  return PITCH_NAMES[((p % 12) + 12) % 12] + (Math.floor(p / 12) - 1);
+}
+function fmtTime(s) {
+  const m = Math.floor(s / 60), sec = String(Math.floor(s % 60)).padStart(2, '0');
+  return `${m}:${sec}`;
+}
+
+// Pure: turn the collected onset events + the runner's note-level summary into
+// the report-card data. Per-segment accuracy buckets onsets by time so we can
+// point at the weakest stretch. Exposed at module scope for testing.
+function summarizePerformance(events, doneSummary, nSeg = 8) {
+  const total = events.length;
+  const correct = events.filter(e => e.correct).length;
+  const wrongFinger = events.filter(e => !e.correct && e.detected_finger).length;
+  const noHand = events.filter(e => !e.correct && !e.detected_finger).length;
+  const fingerAcc = total ? correct / total : 0;
+  const noteAcc = (doneSummary && doneSummary.note_accuracy != null)
+    ? doneSummary.note_accuracy : fingerAcc;
+  const missing = (doneSummary && doneSummary.notes_missing) || 0;
+  const extra = (doneSummary && doneSummary.notes_extra) || 0;
+
+  const tmin = total ? events[0].time : 0;
+  const tmax = total ? events[total - 1].time : 1;
+  const span = Math.max(1e-6, tmax - tmin);
+  const seg = Array.from({ length: nSeg }, () => ({ c: 0, t: 0 }));
+  for (const e of events) {
+    const k = Math.min(nSeg - 1, Math.max(0, Math.floor((e.time - tmin) / span * nSeg)));
+    seg[k].t += 1;
+    if (e.correct) seg[k].c += 1;
+  }
+  const segments = seg.map((s, i) => ({
+    accuracy: s.t ? s.c / s.t : null, total: s.t,
+    range: [tmin + span * i / nSeg, tmin + span * (i + 1) / nSeg],
+  }));
+  let weakest = -1, wAcc = 2;
+  segments.forEach((s, i) => {
+    if (s.total >= 2 && s.accuracy < wAcc) { wAcc = s.accuracy; weakest = i; }
+  });
+
+  const wrongNotes = events
+    .filter(e => !e.correct && e.detected_finger)
+    .map(e => ({ time: e.time, pitch: e.pitch, hand: e.expected_hand,
+                 expected: e.expected_finger, detected: e.detected_finger }))
+    .slice(0, 8);
+
+  const wristCounts = {};
+  for (const e of events) {
+    const w = e.wrist_status || 'unknown';
+    wristCounts[w] = (wristCounts[w] || 0) + 1;
+  }
+  return { total, correct, wrongFinger, noHand, fingerAcc, noteAcc, missing, extra,
+           segments, weakest, wrongNotes, wristCounts };
+}
+
+function ReportCard({ report, onClose, onRetry }) {
+  if (!report) return null;
+  const r = summarizePerformance(report.events || [], report.summary || {});
+  const segMax = Math.max(1, ...r.segments.map(s => s.total));
+  const wristGood = (r.wristCounts.good || 0);
+  const wristBad = (r.wristCounts.collapsed || 0) + (r.wristCounts.arched || 0);
+  const wristMsg = r.total === 0 ? '—'
+    : (wristBad === 0 ? '多數良好'
+      : (wristGood >= wristBad ? '大致良好，偶有塌陷/拱起' : '需注意手腕高度'));
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 30,
+      background: 'rgba(4,8,14,0.72)', backdropFilter: 'blur(4px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+    }}>
+      <div style={{
+        width: '100%', maxWidth: 440, maxHeight: '92%', overflow: 'auto',
+        background: HK.surface, borderRadius: 22, border: `1px solid ${HK.hairlineStrong}`,
+        boxShadow: '0 20px 60px rgba(0,0,0,0.6)', padding: 20,
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+          <div style={{ fontFamily: HK.fontMono, fontSize: 10, color: HK.gold, letterSpacing: 1.5, fontWeight: 700 }}>練習報告</div>
+          <button onClick={onClose} style={btnGlass3}><Icon name="close" size={18} color={HK.text}/></button>
+        </div>
+
+        <div style={{ display: 'flex', gap: 18, justifyContent: 'center', margin: '10px 0 16px' }}>
+          <ScoreRing value={Math.round(r.noteAcc * 100)} label="音符" color={HK.blue}/>
+          <ScoreRing value={Math.round(r.fingerAcc * 100)} label="指法" color={HK.green}/>
+        </div>
+
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 16 }}>
+          <MetricChip icon="bolt" label="正確" value={String(r.correct)}/>
+          <MetricChip icon="close" label="錯指" value={String(r.wrongFinger)} color={r.wrongFinger ? HK.red : HK.text}/>
+          <MetricChip icon="close" label="漏" value={String(r.missing)} color={r.missing ? HK.gold : HK.text}/>
+          <MetricChip icon="close" label="多" value={String(r.extra)} color={r.extra ? HK.gold : HK.text}/>
+        </div>
+
+        {/* Per-segment accuracy bars */}
+        <div style={{ fontFamily: HK.fontMono, fontSize: 9, color: HK.textMuted, letterSpacing: 1.2, marginBottom: 6 }}>逐段準確率</div>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 64, marginBottom: 4 }}>
+          {r.segments.map((s, i) => {
+            const acc = s.accuracy == null ? 0 : s.accuracy;
+            const isWeak = i === r.weakest;
+            return (
+              <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                <div style={{
+                  width: '100%', height: `${Math.max(6, acc * 58)}px`, borderRadius: 4,
+                  background: s.total === 0 ? HK.surface3
+                    : (isWeak ? HK.red : (acc >= 0.8 ? HK.green : acc >= 0.5 ? HK.gold : HK.red)),
+                  opacity: s.total === 0 ? 0.4 : 1,
+                }}/>
+                <div style={{ fontFamily: HK.fontMono, fontSize: 7, color: HK.textMuted }}>
+                  {s.total ? Math.round(acc * 100) : '—'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {r.weakest >= 0 && (
+          <div style={{ fontFamily: HK.fontDisplay, fontSize: 13, color: HK.text, marginBottom: 14 }}>
+            最弱：<span style={{ color: HK.red }}>{fmtTime(r.segments[r.weakest].range[0])}–{fmtTime(r.segments[r.weakest].range[1])}</span> 這段
+          </div>
+        )}
+
+        {/* Notes to work on */}
+        {r.wrongNotes.length > 0 && (
+          <>
+            <div style={{ fontFamily: HK.fontMono, fontSize: 9, color: HK.textMuted, letterSpacing: 1.2, marginBottom: 6 }}>需加強的音（指法）</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 14 }}>
+              {r.wrongNotes.map((w, i) => (
+                <div key={i} style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '6px 10px', borderRadius: 8, background: HK.surface2,
+                  fontFamily: HK.fontMono, fontSize: 11, color: HK.text,
+                }}>
+                  <span>{fmtTime(w.time)} · {w.hand === 'left' ? 'L' : 'R'} {pitchName(w.pitch)}</span>
+                  <span style={{ color: HK.textMuted }}>
+                    用了 <span style={{ color: HK.red }}>{FINGER_NUM_JS[w.detected] || '?'}</span>
+                    {' '}應為 <span style={{ color: HK.green }}>{FINGER_NUM_JS[w.expected] || '?'}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          fontFamily: HK.fontMono, fontSize: 11, color: HK.textMuted, marginBottom: 16 }}>
+          <span>手腕</span><span style={{ color: HK.text }}>{wristMsg}</span>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={onRetry} style={{
+            flex: 1, padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer',
+            background: HK.blue, color: '#001018', fontFamily: HK.fontDisplay, fontSize: 15, fontWeight: 700,
+          }}>再練一次</button>
+          <button onClick={onClose} style={{
+            flex: 1, padding: '12px', borderRadius: 14, cursor: 'pointer',
+            background: 'transparent', color: HK.text, border: `1px solid ${HK.hairlineStrong}`,
+            fontFamily: HK.fontDisplay, fontSize: 15,
+          }}>關閉</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PracticeScreen({ song, onEnd, onBack }) {
   const [playing, setPlaying] = React.useState(true);
   const [elapsed, setElapsed] = React.useState(0);
   const [duration, setDuration] = React.useState(song?.dur ? parseDur(song.dur) : 205);
+  const [replayKey, setReplayKey] = React.useState(0);   // bump to remount the video from 0
   // 'hands' = 渲染手部 (biomech v4, 带准确键号) | 'synthesia' = 无手落音条视图
   const [viewMode, setViewMode] = React.useState('hands');
 
   // Real-time feedback from the Python runner (WebSocket on 8766)
-  const { connected, meta, stats, statusMap, recording, clips, popReady } = useFeedbackStream(HK_WS_URL);
+  const { connected, meta, stats, statusMap, recording, clips, popReady,
+          report, dismissReport, showReportNow } = useFeedbackStream(HK_WS_URL);
+
+  const handleRetry = React.useCallback(() => {
+    dismissReport();
+    setElapsed(0);
+    setPlaying(true);
+    setReplayKey(k => k + 1);            // remount GestureVideo → restarts at 0
+  }, [dismissReport]);
   const [currentEvent, setCurrentEvent] = React.useState(null);
   const [eventGen, setEventGen] = React.useState(0);
 
@@ -555,6 +748,7 @@ function PracticeScreen({ song, onEnd, onBack }) {
       paddingTop: 54, paddingBottom: 28, overflow: 'auto',
       display: 'flex', flexDirection: 'column',
     }}>
+      <ReportCard report={report} onClose={dismissReport} onRetry={handleRetry}/>
       {/* Top bar */}
       <div style={{ padding: '6px 16px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button onClick={onBack} style={btnGlass3}><Icon name="back" size={20} color={HK.text}/></button>
@@ -625,12 +819,14 @@ function PracticeScreen({ song, onEnd, onBack }) {
           </div>
         )}
         <GestureVideo
+          key={replayKey}
           src={videoSrc}
           audioSrc={audioSrc}
           label={videoLabel}
           playing={playing}
           onTimeUpdate={handleTimeUpdate}
           onDuration={setDuration}
+          onEnded={() => { setPlaying(false); showReportNow(); }}
         >
           <FeedbackOverlay event={currentEvent} generation={eventGen}/>
           <RecordingBanner recording={recording}/>
