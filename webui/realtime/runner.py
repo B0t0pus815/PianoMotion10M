@@ -97,6 +97,11 @@ def main():
                    help='reference render width used for key-X geometry')
     p.add_argument('--mirror', action='store_true',
                    help='swap left/right (for user-facing webcam)')
+    p.add_argument('--detect-confidence', type=float, default=0.3,
+                   help='MediaPipe min_detection_confidence (default 0.3). Lower '
+                        'if calibrate.py reports low detection on your recording.')
+    p.add_argument('--track-confidence', type=float, default=0.3,
+                   help='MediaPipe min_tracking_confidence (default 0.3).')
     p.add_argument('--no-preview', action='store_true')
     p.add_argument('--fast', action='store_true',
                    help='replay video as fast as possible (skip realtime pacing)')
@@ -147,7 +152,9 @@ def main():
     vsrc = int(args.video) if args.video.isdigit() else args.video
     video = VideoSource(vsrc, realtime=not args.fast)
     midi = MidiSource(args.midi)
-    tracker = HandTracker(mirror=args.mirror)
+    tracker = HandTracker(mirror=args.mirror,
+                          min_detection_confidence=args.detect_confidence,
+                          min_tracking_confidence=args.track_confidence)
 
     ref_midi = args.ref_midi or args.midi
     if args.fingering_source in ('pianoplayer', 'arlstm', 'onnx'):

@@ -7,6 +7,29 @@ The "Phase / Stage" labels match the architectural rollout in
 
 ---
 
+## 2026-06-15 — Threshold calibration instrument (`calibrate.py`)
+
+The real-time grader gated user input on absolute-pixel constants tuned for the
+1920×1080 biomech renders (`MIN_PRESS_VELOCITY`, `WRIST_*`, MediaPipe
+confidences); on a real webcam recording they are silently wrong and nothing
+reported it. Built the measurement that unblocks "tune the thresholds".
+
+- ✓ NEW `webui/realtime/calibrate.py` — runs the runner's tracking + history +
+  A/V-sync machinery over a recording and reports, per threshold, the
+  distribution it gates on (detection rate, max press velocity at onsets,
+  |wrist deviation|) + data-driven recommended values + a 1080p resolution-scale
+  note. `--out` writes a `CalibrationReport` JSON.
+- ✓ Honest degenerate-case output: at 0 tracked onsets it says "nothing to
+  measure" instead of a misleading "✓ 0% blind presses".
+- ✓ `runner.py` `--detect-confidence` / `--track-confidence` flags (pass through
+  to `HandTracker`, defaults unchanged) so the tracking finding is actionable.
+- ✓ Verified: 22 new unit tests; real-frame negative control on the biomech
+  render (0% detection → ⚠ warning fires); runner smoke with the new flags;
+  full fast suite **108 passed**.
+- Additive only — verified grading pipeline behavior unchanged. Applying the
+  *pixel* thresholds without source edits is the documented next step, to be
+  done with the first real recording in hand.
+
 ## 2026-05-26 — Beethoven cross-piece + Universal Winner claim revised
 
 ### Beethoven Op.2 No.1 mvt 1 audit
