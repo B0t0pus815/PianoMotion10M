@@ -26,9 +26,22 @@ reported it. Built the measurement that unblocks "tune the thresholds".
 - ✓ Verified: 22 new unit tests; real-frame negative control on the biomech
   render (0% detection → ⚠ warning fires); runner smoke with the new flags;
   full fast suite **108 passed**.
-- Additive only — verified grading pipeline behavior unchanged. Applying the
-  *pixel* thresholds without source edits is the documented next step, to be
-  done with the first real recording in hand.
+- Additive only — verified grading pipeline behavior unchanged.
+
+### Comparator thresholds made injectable (apply path)
+- ✓ NEW frozen `Thresholds` dataclass in `comparator.py` — every field defaults
+  to the legacy module constant, so `Thresholds()` (and any call without `thr=`)
+  reproduces today's behavior exactly. Threaded `thr=` through `compare_onset`,
+  `wrist_status`, `detect_press_finger`.
+- ✓ `Thresholds.from_calibration(report)` / `from_json(path)` map calibrate's
+  `recommended.{min_press_velocity, wrist_threshold_px}` (None → keep default).
+- ✓ `runner.py --calibration calib.json` applies them to grading — no source
+  edit needed to act on a recording's recommendations.
+- ✓ Verified: 5 new comparator tests (default ≡ constants; custom velocity flips
+  press verdict; custom wrist threshold flips through `compare_onset`;
+  from_calibration mapping + None-skip); runner `--calibration` smoke; full fast
+  suite **113 passed**. The measure→recommend→apply loop is now complete on
+  replay; only the threshold *values* wait on a real recording.
 
 ## 2026-05-26 — Beethoven cross-piece + Universal Winner claim revised
 

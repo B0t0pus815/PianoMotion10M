@@ -17,6 +17,7 @@ camera angles / hand sizes need different baselines).
 from __future__ import annotations
 
 import collections
+import json
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -35,6 +36,53 @@ MIN_PRESS_VELOCITY = 80.0
 WRIST_REFERENCE_WINDOW = 4.0     # seconds of recent history → rolling median
 WRIST_ARCHED_THRESHOLD = 25.0    # current_y < median - this → 'arched' (上抬)
 WRIST_COLLAPSED_THRESHOLD = 25.0 # current_y > median + this → 'collapsed' (下沉)
+
+
+@dataclass(frozen=True)
+class Thresholds:
+    """Injectable copies of the press/wrist thresholds.
+
+    Every field defaults to the module constant above, so `Thresholds()` (and
+    therefore any call that doesn't pass `thr=`) reproduces today's behavior
+    exactly — the change is additive. Use `Thresholds.from_calibration(...)` to
+    apply calibrate.py's per-recording recommendations to grading WITHOUT
+    editing source (the whole point: the pixel thresholds were baked for 1080p
+    biomech renders and are wrong on a real webcam at a different scale).
+    """
+    press_window: float = PRESS_WINDOW
+    min_press_velocity: float = MIN_PRESS_VELOCITY
+    wrist_reference_window: float = WRIST_REFERENCE_WINDOW
+    wrist_arched: float = WRIST_ARCHED_THRESHOLD
+    wrist_collapsed: float = WRIST_COLLAPSED_THRESHOLD
+
+    @classmethod
+    def from_calibration(cls, data: dict) -> 'Thresholds':
+        """Build from a calibrate.py CalibrationReport dict, applying the
+        `recommended` values that are present. A missing/None recommendation
+        keeps that field's default (e.g. a recording with no tracked hands
+        yields no recommendation → defaults stay).
+
+        Maps: recommended.min_press_velocity → min_press_velocity;
+              recommended.wrist_threshold_px → wrist_arched & wrist_collapsed.
+        """
+        rec = (data or {}).get('recommended', {}) or {}
+        kw: dict = {}
+        mpv = rec.get('min_press_velocity')
+        if mpv is not None:
+            kw['min_press_velocity'] = float(mpv)
+        wt = rec.get('wrist_threshold_px')
+        if wt is not None:
+            kw['wrist_arched'] = float(wt)
+            kw['wrist_collapsed'] = float(wt)
+        return cls(**kw)
+
+    @classmethod
+    def from_json(cls, path: str) -> 'Thresholds':
+        with open(path) as f:
+            return cls.from_calibration(json.load(f))
+
+
+DEFAULT_THRESHOLDS = Thresholds()
 
 
 @dataclass
@@ -82,7 +130,8 @@ class HandHistory:
                 if target_t - window <= t <= target_t]
 
 
-def wrist_status(history: HandHistory, hand: str, onset_time: float) -> tuple[str, float]:
+def wrist_status(history: HandHistory, hand: str, onset_time: float,
+                 thr: Thresholds = DEFAULT_THRESHOLDS) -> tuple[str, float]:
     """Classify wrist height at onset against the rolling-median baseline.
 
     Returns (status, deviation_px) where status ∈
@@ -90,24 +139,24 @@ def wrist_status(history: HandHistory, hand: str, onset_time: float) -> tuple[st
     signed pixel offset from the rolling median (+ve = below median, i.e.
     physically lower; -ve = above median, i.e. physically higher / arched).
     """
-    ys = history.recent_wrist_y(hand, onset_time, WRIST_REFERENCE_WINDOW)
+    ys = history.recent_wrist_y(hand, onset_time, thr.wrist_reference_window)
     if len(ys) < 4:
         return 'unknown', 0.0
     # Current wrist y is the LAST sample within press window
-    current_ys = history.recent_wrist_y(hand, onset_time, PRESS_WINDOW)
+    current_ys = history.recent_wrist_y(hand, onset_time, thr.press_window)
     if not current_ys:
         return 'unknown', 0.0
     current = current_ys[-1]
     baseline = float(np.median(ys))
     deviation = current - baseline   # positive = below median
-    if deviation < -WRIST_ARCHED_THRESHOLD:
+    if deviation < -thr.wrist_arched:
         return 'arched', deviation
-    if deviation > WRIST_COLLAPSED_THRESHOLD:
+    if deviation > thr.wrist_collapsed:
         return 'collapsed', deviation
     return 'good', deviation
 
 
-def detect_press_finger(history):
+def detect_press_finger(history, min_press_velocity: float = MIN_PRESS_VELOCITY):
     if len(history) < 2:
         return None, 0.0
     velocities = np.zeros(5, dtype=np.float32)
@@ -118,7 +167,7 @@ def detect_press_finger(history):
         velocities += (p1[:, 1] - p0[:, 1]) / dt
     velocities /= max(len(history) - 1, 1)
 
-    if np.max(velocities) < MIN_PRESS_VELOCITY:
+    if np.max(velocities) < min_press_velocity:
         _, last_tips = history[-1]
         finger_idx = int(np.argmax(last_tips[:, 1]))
         return finger_idx, 0.3
@@ -134,21 +183,25 @@ def detect_press_finger(history):
 
 
 def compare_onset(history: HandHistory, expected: ExpectedOnset,
-                  alt_finger_idxs: Optional[set] = None) -> OnsetResult:
+                  alt_finger_idxs: Optional[set] = None,
+                  thr: Thresholds = DEFAULT_THRESHOLDS) -> OnsetResult:
     """Compare user's pressing finger vs the expected finger.
 
     alt_finger_idxs: if provided, treats ANY index in the set as correct.
     Used for chord clusters where multiple fingers press simultaneously and
     pitch→finger mapping is ambiguous from MIDI alone — accepting any
     chord-member finger removes a false-positive class.
+
+    thr: press/wrist thresholds (defaults to the module constants; pass a
+    calibrated Thresholds to grade a real recording at its own scale).
     """
     target_set = alt_finger_idxs or {expected.expected_finger_idx}
 
     # Wrist status is computed independently of finger correctness, so we
     # always evaluate it (even if finger detection fails).
-    w_status, w_dev = wrist_status(history, expected.expected_hand, expected.time)
+    w_status, w_dev = wrist_status(history, expected.expected_hand, expected.time, thr)
 
-    snaps = history.recent(expected.expected_hand, expected.time, PRESS_WINDOW)
+    snaps = history.recent(expected.expected_hand, expected.time, thr.press_window)
     if not snaps:
         return OnsetResult(
             time=expected.time, pitch=expected.pitch,
@@ -156,7 +209,7 @@ def compare_onset(history: HandHistory, expected: ExpectedOnset,
             expected_finger=expected.expected_finger,
             detected_finger=None, correct=False, confidence=0.0,
             wrist_status=w_status, wrist_deviation_px=w_dev)
-    finger_idx, conf = detect_press_finger(snaps)
+    finger_idx, conf = detect_press_finger(snaps, thr.min_press_velocity)
     if finger_idx is None:
         return OnsetResult(
             time=expected.time, pitch=expected.pitch,

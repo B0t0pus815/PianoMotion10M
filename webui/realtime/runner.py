@@ -35,6 +35,7 @@ from webui.realtime.reference import build_reference
 from webui.realtime.fingering_engine import generate_fingering
 from webui.realtime.comparator import (
     HandHistory, compare_onset, OnsetResult, precompute_chord_finger_sets,
+    Thresholds, DEFAULT_THRESHOLDS,
 )
 from webui.realtime.clip_recorder import ClipConfig, ClipRecorder
 
@@ -102,6 +103,10 @@ def main():
                         'if calibrate.py reports low detection on your recording.')
     p.add_argument('--track-confidence', type=float, default=0.3,
                    help='MediaPipe min_tracking_confidence (default 0.3).')
+    p.add_argument('--calibration',
+                   help='calibrate.py report JSON; apply its recommended '
+                        'comparator thresholds (MIN_PRESS_VELOCITY, wrist) to '
+                        'grading so a real recording is judged at its own scale.')
     p.add_argument('--no-preview', action='store_true')
     p.add_argument('--fast', action='store_true',
                    help='replay video as fast as possible (skip realtime pacing)')
@@ -155,6 +160,13 @@ def main():
     tracker = HandTracker(mirror=args.mirror,
                           min_detection_confidence=args.detect_confidence,
                           min_tracking_confidence=args.track_confidence)
+
+    thresholds = DEFAULT_THRESHOLDS
+    if args.calibration:
+        thresholds = Thresholds.from_json(args.calibration)
+        print(f'[calib] thresholds from {args.calibration}: '
+              f'min_press_velocity={thresholds.min_press_velocity:.1f} px/s  '
+              f'wrist=±{thresholds.wrist_arched:.1f} px')
 
     ref_midi = args.ref_midi or args.midi
     if args.fingering_source in ('pianoplayer', 'arlstm', 'onnx'):
@@ -312,7 +324,9 @@ def main():
                     if best_j is None:
                         continue
                 e = expected[best_j]
-                r = compare_onset(history, e, alt_finger_idxs=chord_finger_sets.get(best_j))
+                r = compare_onset(history, e,
+                                  alt_finger_idxs=chord_finger_sets.get(best_j),
+                                  thr=thresholds)
                 results.append(r)
                 onset_cursor = max(onset_cursor, best_j + 1)
                 if clip_recorder:
