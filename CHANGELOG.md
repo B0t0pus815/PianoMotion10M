@@ -7,6 +7,31 @@ The "Phase / Stage" labels match the architectural rollout in
 
 ---
 
+## 2026-06-21 — Real-time rhythm alignment hints (rush/drag)
+
+The real-time grader judged finger + wrist + note accuracy but never timing,
+even though the runner already had the played time and the reference onset time
+at every matched note and threw the offset away. Surfaced it as live rhythm
+feedback.
+
+- ✓ NEW `webui/realtime/rhythm.py` — `RhythmTracker`: an EMA tempo baseline that
+  classifies each onset as rush / on_time / drag from the *detrended* offset
+  (deviation from the student's own running tempo = local steadiness), so a
+  deliberately slower-but-steady practice tempo doesn't spam warnings.
+- ✓ Two readings per onset: the raw `played − reference` offset (are you behind
+  the song) and the detrended offset (the live `搶拍`/`拖拍` badge); the report
+  card's `節奏` tendency uses the raw offset.
+- ✓ `note_align.py` `ref_time_by_onset` grades rhythm against the faithful raw
+  MIDI time, not the possibly-reordered expected `.time`.
+- ✓ `runner.py` feeds the tracker per matched onset, broadcasts the fields on the
+  `onset` WebSocket event, and prints/JSON a rush/drag aggregate;
+  `PracticeScreen.js` renders the badge + report-card section.
+- ✓ Verified: 10 new `test_rhythm.py` tests + full suite **40 passed** (rhythm +
+  comparator + note_align); end-to-end replay with a deliberately time-warped MIDI
+  (`tests/fixtures/make_warped.py`) produces real rush/drag events (14 rush / 11
+  drag over 80 onsets).
+- Additive only — defaulted fields; existing call sites and JSON dumps unchanged.
+
 ## 2026-06-15 — Threshold calibration instrument (`calibrate.py`)
 
 The real-time grader gated user input on absolute-pixel constants tuned for the
