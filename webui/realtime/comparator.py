@@ -54,6 +54,9 @@ class Thresholds:
     wrist_reference_window: float = WRIST_REFERENCE_WINDOW
     wrist_arched: float = WRIST_ARCHED_THRESHOLD
     wrist_collapsed: float = WRIST_COLLAPSED_THRESHOLD
+    # Rhythm-hint v1 (2026-06-21): on-time half-window applied to the
+    # tempo-detrended onset offset (see rhythm.RhythmTracker).
+    rhythm_tolerance_s: float = 0.06
 
     @classmethod
     def from_calibration(cls, data: dict) -> 'Thresholds':
@@ -98,6 +101,11 @@ class OnsetResult:
     # 'unknown' (when no recent history to compute baseline).
     wrist_status: str = 'unknown'
     wrist_deviation_px: float = 0.0   # signed pixels from rolling median; +ve = below
+    # Rhythm-hint v1 (2026-06-21). Set by the runner (which owns both the played
+    # and reference times); see rhythm.RhythmTracker. +ve offset = drag/late.
+    timing_offset_s: float = 0.0      # raw: played - reference
+    timing_detrended_s: float = 0.0   # raw minus running tempo baseline
+    rhythm_status: str = 'unknown'    # 'rush' / 'drag' / 'on_time' / 'unknown'
 
 
 class HandHistory:
