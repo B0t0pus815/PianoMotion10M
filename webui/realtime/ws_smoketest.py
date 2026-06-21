@@ -45,11 +45,14 @@ async def consume(url: str, max_msgs: int | None, retry_seconds: float = 0.0):
                 elif t == 'onset':
                     tag = 'OK ' if data['correct'] else (
                         '-- ' if data.get('detected_finger') is None else 'X  ')
+                    off = data.get('timing_offset_s')
+                    off_str = f'  off={off:+.3f}s/{data.get("rhythm_status", "?")}' \
+                        if off is not None else ''
                     print(f'  [{tag}] t={data["time"]:.2f} '
                           f'note={data["pitch"]}  '
                           f'exp={data["expected_hand"][0].upper()}/{data["expected_finger"]}  '
                           f'got={data.get("detected_finger") or "-"}  '
-                          f'conf={data["confidence"]:.2f}')
+                          f'conf={data["confidence"]:.2f}{off_str}')
                 elif t == 'done':
                     print(f'  done: total={data["total"]} correct={data["correct"]} '
                           f'wrong={data["wrong"]} no_hand={data["no_hand"]}')

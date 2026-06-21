@@ -14,8 +14,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from webui.realtime.comparator import (
-    HandHistory, wrist_status, compare_onset, OnsetResult,
+    HandHistory, wrist_status, compare_onset, OnsetResult, detect_press_finger,
     WRIST_ARCHED_THRESHOLD, WRIST_COLLAPSED_THRESHOLD,
+    Thresholds, DEFAULT_THRESHOLDS, PRESS_WINDOW, MIN_PRESS_VELOCITY,
 )
 from webui.realtime.hand_tracker import HandPose
 from webui.realtime.reference import ExpectedOnset
@@ -194,6 +195,74 @@ def test_onsetresult_default_wrist_fields():
     )
     assert r.wrist_status == 'unknown'
     assert r.wrist_deviation_px == 0.0
+
+
+# ─── Injectable thresholds ─────────────────────────────────────────────
+
+def test_default_thresholds_equal_module_constants():
+    """The additive change must be behavior-preserving: the default equals the
+    legacy constants exactly."""
+    t = DEFAULT_THRESHOLDS
+    assert t.press_window == PRESS_WINDOW
+    assert t.min_press_velocity == MIN_PRESS_VELOCITY
+    assert t.wrist_arched == WRIST_ARCHED_THRESHOLD
+    assert t.wrist_collapsed == WRIST_COLLAPSED_THRESHOLD
+
+
+def test_detect_press_finger_velocity_threshold_changes_verdict():
+    """A press whose fastest finger moves 50 px/s: above a custom 40 bar (real
+    press → fastest finger) but below the default 80 bar (fallback → lowest
+    finger). The two paths return different fingers, so the threshold matters."""
+    # finger 0 sits low and static; finger 1 moves down 5px in 0.1s = 50 px/s.
+    def tips(ys):
+        a = np.zeros((5, 2), dtype=np.float32)
+        a[:, 1] = ys
+        return a
+    snaps = [(0.0, tips([200, 100, 100, 100, 100])),
+             (0.1, tips([200, 105, 100, 100, 100]))]
+    # default 80 px/s → no finger clears it → lowest-finger fallback = finger 0
+    idx_default, conf_default = detect_press_finger(snaps)            # 80 default
+    assert idx_default == 0
+    assert conf_default == pytest.approx(0.3)
+    # custom 40 px/s → finger 1 clears it → real press attribution
+    idx_low, _ = detect_press_finger(snaps, min_press_velocity=40.0)
+    assert idx_low == 1
+
+
+def test_compare_onset_honors_custom_wrist_threshold():
+    """A −15px wrist deviation is 'good' at the default ±25 but 'arched' at a
+    tighter ±10 — and it must flow through compare_onset, not just wrist_status."""
+    h = HandHistory()
+    for i in range(40):
+        h.push(float(i) * 0.1, {'right': make_pose(wrist_y=500.0)})
+    h.push(3.95, {'right': make_pose(wrist_y=485.0)})  # dev = −15
+    exp = make_expected(time=4.0)
+    assert compare_onset(h, exp).wrist_status == 'good'                 # default ±25
+    tight = Thresholds(wrist_arched=10.0, wrist_collapsed=10.0)
+    assert compare_onset(h, exp, thr=tight).wrist_status == 'arched'
+
+
+def test_thresholds_from_calibration_maps_recommended():
+    data = {'recommended': {
+        'min_press_velocity': 48.0,
+        'wrist_threshold_px': 38.0,
+        'min_press_velocity_scaled_default': 53.3,   # ignored
+    }}
+    t = Thresholds.from_calibration(data)
+    assert t.min_press_velocity == 48.0
+    assert t.wrist_arched == 38.0 and t.wrist_collapsed == 38.0
+    # untouched fields keep their defaults
+    assert t.press_window == PRESS_WINDOW
+    assert t.wrist_reference_window == DEFAULT_THRESHOLDS.wrist_reference_window
+
+
+def test_thresholds_from_calibration_skips_none_and_empty():
+    # None recommendations (e.g. a recording with no tracked hands) → all defaults
+    assert Thresholds.from_calibration(
+        {'recommended': {'min_press_velocity': None, 'wrist_threshold_px': None}}
+    ) == Thresholds()
+    assert Thresholds.from_calibration({}) == Thresholds()
+    assert Thresholds.from_calibration(None) == Thresholds()
 
 
 if __name__ == '__main__':

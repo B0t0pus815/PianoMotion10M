@@ -241,6 +241,26 @@ function FeedbackOverlay({ event, generation }) {
     );
   })();
 
+  // Rhythm-hint v1 (2026-06-21): rush/drag badge driven by the tempo-detrended
+  // offset (local steadiness). 'on_time'/'unknown' show nothing.
+  const rhythmBadge = (() => {
+    if (event.rhythm_status !== 'rush' && event.rhythm_status !== 'drag') return null;
+    const ms = Math.round((event.timing_detrended_s || 0) * 1000);
+    const isRush = event.rhythm_status === 'rush';
+    const text = isRush ? '搶拍' : '拖拍';
+    const rColor = isRush ? HK.blue : HK.gold;
+    return (
+      <div style={{
+        marginTop: 6, padding: '4px 12px', borderRadius: 8,
+        background: `${rColor}22`, border: `1px solid ${rColor}`,
+        color: HK.text, fontFamily: HK.fontMono, fontSize: 11,
+        letterSpacing: 0.5,
+      }}>
+        ♪ {text} ({ms > 0 ? '+' : ''}{ms}ms)
+      </div>
+    );
+  })();
+
   return (
     <div key={generation} style={{
       position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -270,6 +290,7 @@ function FeedbackOverlay({ event, generation }) {
           boxShadow: `0 0 30px ${color}66`,
         }}>{label}</div>
         {wristBadge}
+        {rhythmBadge}
       </div>
       <style>{`
         @keyframes hkFbFlash { from {opacity: 1} to {opacity: 0} }
@@ -568,8 +589,30 @@ function summarizePerformance(events, doneSummary, nSeg = 8) {
     const w = e.wrist_status || 'unknown';
     wristCounts[w] = (wristCounts[w] || 0) + 1;
   }
+
+  // Rhythm-hint v1: tendency from the RAW played−reference offset (are you
+  // behind the song overall), tol matches the server's rhythm_tolerance_s.
+  const RHYTHM_TOL_S = 0.06;
+  const offsets = events.map(e => e.timing_offset_s).filter(o => o != null);
+  let rEarly = 0, rLate = 0, rOnTime = 0, rSum = 0;
+  for (const o of offsets) {
+    rSum += o;
+    if (o < -RHYTHM_TOL_S) rEarly += 1;
+    else if (o > RHYTHM_TOL_S) rLate += 1;
+    else rOnTime += 1;
+  }
+  const rMean = offsets.length ? rSum / offsets.length : 0;
+  const rAvgAbsMs = offsets.length
+    ? Math.round(1000 * offsets.reduce((a, o) => a + Math.abs(o), 0) / offsets.length)
+    : 0;
+  const rTendency = offsets.length === 0 ? '—'
+    : (rMean > RHYTHM_TOL_S ? '稍拖拍'
+      : (rMean < -RHYTHM_TOL_S ? '稍搶拍' : '穩定'));
+  const rhythm = { count: offsets.length, early: rEarly, onTime: rOnTime, late: rLate,
+                   avgAbsMs: rAvgAbsMs, meanMs: Math.round(rMean * 1000), tendency: rTendency };
+
   return { total, correct, wrongFinger, noHand, fingerAcc, noteAcc, missing, extra,
-           segments, weakest, wrongNotes, wristCounts };
+           segments, weakest, wrongNotes, wristCounts, rhythm };
 }
 
 function ReportCard({ report, onClose, onRetry }) {
@@ -660,8 +703,25 @@ function ReportCard({ report, onClose, onRetry }) {
         )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          fontFamily: HK.fontMono, fontSize: 11, color: HK.textMuted, marginBottom: 16 }}>
+          fontFamily: HK.fontMono, fontSize: 11, color: HK.textMuted, marginBottom: 8 }}>
           <span>手腕</span><span style={{ color: HK.text }}>{wristMsg}</span>
+        </div>
+
+        {/* Rhythm-hint v1: 節奏 — avg deviation, early/on/late counts, tendency */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          fontFamily: HK.fontMono, fontSize: 11, color: HK.textMuted, marginBottom: 16 }}>
+          <span>節奏 {r.rhythm.count ? `± avg ${r.rhythm.avgAbsMs}ms` : ''}</span>
+          <span style={{ color: HK.text }}>
+            {r.rhythm.count === 0 ? '—' : (
+              <>
+                提前 {r.rhythm.early} · 準 {r.rhythm.onTime} · 拖拍 {r.rhythm.late}
+                {'　'}
+                <span style={{ color: r.rhythm.tendency === '穩定' ? HK.green : HK.gold }}>
+                  {r.rhythm.tendency}
+                </span>
+              </>
+            )}
+          </span>
         </div>
 
         <div style={{ display: 'flex', gap: 10 }}>

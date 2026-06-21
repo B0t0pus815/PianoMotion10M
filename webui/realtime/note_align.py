@@ -183,6 +183,35 @@ def build_match_map(played, reference, expected=None) -> dict:
     return out
 
 
+def ref_time_by_onset(expected, reference) -> list:
+    """Faithful reference onset time for each `expected` index.
+
+    `generate_fingering`'s ExpectedOnset .time is the note start, but its
+    ordering can drift from raw MIDI, so rhythm grading should compare against
+    the FAITHFUL reference time. This pairs each expected onset to a reference
+    note via the same (pitch, occurrence-rank) bridge `build_match_map` uses —
+    both sides ranked independently in (time, pitch) order so a uniform per-note
+    time offset on `expected` (which preserves same-pitch ordering) doesn't break
+    the pairing. Returns a list aligned to `expected` indices; an unpaired onset
+    (count mismatch) falls back to its own .time.
+    """
+    from collections import defaultdict
+    R = sorted((_pt(n) for n in reference), key=lambda x: (x[0], x[1]))
+    ref_time_by_rank, cnt = {}, defaultdict(int)
+    for t, p in R:
+        ref_time_by_rank[(p, cnt[p])] = t
+        cnt[p] += 1
+    order = sorted(range(len(expected)),
+                   key=lambda i: (_pt(expected[i])[0], _pt(expected[i])[1]))
+    out = [0.0] * len(expected)
+    cnt2 = defaultdict(int)
+    for oi in order:
+        et, p = _pt(expected[oi])
+        out[oi] = ref_time_by_rank.get((p, cnt2[p]), et)
+        cnt2[p] += 1
+    return out
+
+
 def estimate_offset_scale(warp) -> tuple:
     """Least-squares fit expected_t ≈ scale * played_t + offset over matched
     pairs. Returns (scale, offset, rms_residual_seconds). scale>1 means the

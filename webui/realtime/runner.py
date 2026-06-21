@@ -35,7 +35,9 @@ from webui.realtime.reference import build_reference
 from webui.realtime.fingering_engine import generate_fingering
 from webui.realtime.comparator import (
     HandHistory, compare_onset, OnsetResult, precompute_chord_finger_sets,
+    Thresholds, DEFAULT_THRESHOLDS,
 )
+from webui.realtime.rhythm import RhythmTracker
 from webui.realtime.clip_recorder import ClipConfig, ClipRecorder
 
 
@@ -102,6 +104,10 @@ def main():
                         'if calibrate.py reports low detection on your recording.')
     p.add_argument('--track-confidence', type=float, default=0.3,
                    help='MediaPipe min_tracking_confidence (default 0.3).')
+    p.add_argument('--calibration',
+                   help='calibrate.py report JSON; apply its recommended '
+                        'comparator thresholds (MIN_PRESS_VELOCITY, wrist) to '
+                        'grading so a real recording is judged at its own scale.')
     p.add_argument('--no-preview', action='store_true')
     p.add_argument('--fast', action='store_true',
                    help='replay video as fast as possible (skip realtime pacing)')
@@ -156,6 +162,13 @@ def main():
                           min_detection_confidence=args.detect_confidence,
                           min_tracking_confidence=args.track_confidence)
 
+    thresholds = DEFAULT_THRESHOLDS
+    if args.calibration:
+        thresholds = Thresholds.from_json(args.calibration)
+        print(f'[calib] thresholds from {args.calibration}: '
+              f'min_press_velocity={thresholds.min_press_velocity:.1f} px/s  '
+              f'wrist=±{thresholds.wrist_arched:.1f} px')
+
     ref_midi = args.ref_midi or args.midi
     if args.fingering_source in ('pianoplayer', 'arlstm', 'onnx'):
         expected = generate_fingering(ref_midi, hand_size=args.hand_size,
@@ -209,8 +222,16 @@ def main():
     # generate_fingering's ExpectedOnset .time carries per-note offsets that would
     # perturb the alignment, so we align against the raw notes and bridge to the
     # expected onsets by (pitch, rank).
-    from webui.realtime.note_align import build_match_map, notes_from_midi
+    from webui.realtime.note_align import (
+        build_match_map, notes_from_midi, ref_time_by_onset,
+    )
     ref_notes = notes_from_midi(ref_midi)
+
+    # Rhythm-hint v1: faithful reference onset time per expected index (rhythm is
+    # graded against the raw MIDI time, not the possibly-reordered expected .time)
+    # + a running rush/drag tracker fed in onset order from the main loop.
+    ref_t_by_onset = ref_time_by_onset(expected, ref_notes)
+    rhythm_tracker = RhythmTracker(tolerance_s=thresholds.rhythm_tolerance_s)
 
     # Auto-sync: estimate the A/V offset δ (video ≈ midi + δ) and convert each
     # video frame time to MIDI time with (frame.timestamp − δ), so MIDI onsets
@@ -312,7 +333,13 @@ def main():
                     if best_j is None:
                         continue
                 e = expected[best_j]
-                r = compare_onset(history, e, alt_finger_idxs=chord_finger_sets.get(best_j))
+                r = compare_onset(history, e,
+                                  alt_finger_idxs=chord_finger_sets.get(best_j),
+                                  thr=thresholds)
+                rr = rhythm_tracker.update(ev.timestamp, ref_t_by_onset[best_j])
+                r.timing_offset_s = rr.offset_s
+                r.timing_detrended_s = rr.detrended_s
+                r.rhythm_status = rr.status
                 results.append(r)
                 onset_cursor = max(onset_cursor, best_j + 1)
                 if clip_recorder:
@@ -333,6 +360,10 @@ def main():
                         # Wrist feedback v1 (2026-05-24)
                         'wrist_status': r.wrist_status,
                         'wrist_deviation_px': round(r.wrist_deviation_px, 1),
+                        # Rhythm-hint v1 (2026-06-21)
+                        'timing_offset_s': round(r.timing_offset_s, 3),
+                        'timing_detrended_s': round(r.timing_detrended_s, 3),
+                        'rhythm_status': r.rhythm_status,
                     })
                 if args.max_onsets and len(results) >= args.max_onsets:
                     raise StopIteration
@@ -381,6 +412,16 @@ def main():
           f'wrong={na.wrong} missing={na.missing} extra={na.extra}')
     print(f'  Tempo (played→ref):     scale={n_scale:.3f} offset={n_offset:+.2f}s rms={n_rms:.3f}s')
 
+    # Rhythm-hint v1: rush/drag tendency from the raw played−reference offsets.
+    rtol = thresholds.rhythm_tolerance_s
+    offsets = [r.timing_offset_s for r in results]
+    r_mean = sum(offsets) / len(offsets) if offsets else 0.0
+    r_early = sum(1 for o in offsets if o < -rtol)
+    r_late = sum(1 for o in offsets if o > rtol)
+    r_on = len(offsets) - r_early - r_late
+    print(f'  Rhythm (played−ref):    mean={r_mean * 1000:+.0f}ms  '
+          f'early={r_early} on_time={r_on} late={r_late}  (tol=±{rtol * 1000:.0f}ms)')
+
     if args.output_json:
         import json
         with open(args.output_json, 'w') as f:
@@ -397,6 +438,11 @@ def main():
                     'tempo_scale': round(n_scale, 4),
                     'tempo_offset_s': round(n_offset, 3),
                     'align_rms_s': round(n_rms, 4),
+                },
+                'rhythm': {
+                    'mean_offset_s': round(r_mean, 4),
+                    'early': r_early, 'on_time': r_on, 'late': r_late,
+                    'tolerance_s': rtol,
                 },
                 'onsets': [r.__dict__ for r in results],
             }, f, indent=2)
